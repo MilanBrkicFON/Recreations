@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="/css/default.css"/>
+        <h:outputStylesheet name="/css/cssLayout.css"/>
+        <title>SRC Sunce</title>
+        <style type="text/css">
+
+
+            .noBorders tr, .noBorders td {
+                background: none !important;
+                border: none !important;
+            } 
+            .ui-layout-center{
+                border: none;
+            }
+            .ui-layout-north {
+                z-index:40 !important;
+                overflow:visible !important;
+                border:none;
+            }
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+            .ui-autocomplete{
+                z-index:40 !important;
+                overflow:visible !important;
+            }
+        </style>
+    </h:head>
+
+    <h:body>
+
+
+        <p:layout fullPage="true" >
+            <p:layoutUnit position="north">
+                <h:form id="menu-bar" >
+                    <p:menubar autoDisplay="false" id="menubar">
+                        <p:menuitem  value="#{msg.menubar_home}" action="#{navigacija.pocetna()}"  ajax="false" icon="fa fa-home" />
+                        <p:submenu label="#{msg.menubar_user}" >
+                            <p:menuitem  value="#{msg.menubar_user_profile}" action="#{mBKorisnik.pokreniProfilnuStranu()}" ajax="false" /> 
+                            <p:menuitem value="Edit strana" url="profilnaStrana.xhtml" ajax="false" /> 
+                            <p:menuitem value="Save strana" url="profilnaStrana.xhtml" ajax="false" /> 
+
+                        </p:submenu>
+
+                        <p:submenu label="#{msg.menubar_recreation}">
+                            <p:menuitem value="#{msg.menubar_recreation_workout}" url="./mojiTreninzi.xhtml" ajax="false" /> 
+                        </p:submenu>
+
+
+                        <f:facet name="options">
+
+                            <h:form>
+                                <p:autoComplete 
+                                    id="event" 
+                                    minQueryLength="2" 
+                                    value="#{autoCompleteView.osoba}"  
+                                    completeMethod="#{autoCompleteView.getList}"
+                                    var="o"
+                                    itemLabel="#{o.getName()}"
+                                    itemValue="#{o}"
+                                    queryDelay="1000"
+                                    converter="osobaConv">
+
+                                    <!-- pozovi mbKorisnk za izmenu profilnog korisnika -->
+                                    <p:ajax event="itemSelect" process="@all" listener="#{autoCompleteView.onItemSelect}" update="msgs" />
+                                </p:autoComplete>
+                                <p:commandButton value="#{msg.msg_logout_button}" action="#{mBKorisnik.logout()}" ajax="false" icon="fa fa-sign-out"/> 
+                                <p:growl id="msgs" showDetail="true" />
+                            </h:form>
+
+
+                        </f:facet>
+                    </p:menubar><p:growl id="msgs" showDetail="true" />
+                    <p:sticky target="menubar" />
+                </h:form>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="south" size="100">
+                <ui:insert name="bottom"></ui:insert>
+            </p:layoutUnit>
+            <p:layoutUnit position="east" size="200">
+                <ui:insert name="right"></ui:insert>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="west" size="200">
+                <ui:insert name="left"></ui:insert>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center" >
+                <ui:insert name="content">Content</ui:insert>
+            </p:layoutUnit>
+        </p:layout>
+    </h:body>
+
+</html>

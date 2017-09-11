@@ -1,0 +1,25 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : May 25, 2017, 8:36:26 AM
+    Author     : student
+*/
+
+.page-container{
+    position: relative;
+    width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.login-container{
+    width: 300px;
+    padding: 20px;
+    margin: 200px auto;
+    position: relative;
+    /*background-color: appworkspace;*/
+    border: 1pt solid lightgrey;
+}

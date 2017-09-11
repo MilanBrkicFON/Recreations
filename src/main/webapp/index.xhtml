@@ -1,0 +1,192 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pm="http://primefaces.org/mobile"
+      >
+    <h:head>
+        <title>Dobrodosli na S.R.C. - Sunce</title>
+    </h:head>
+    <!-- Radi na glassfish-u v4 -->
+    <!-- restFB FacebookGraphApi.. da li moze da vrsi autentikaciju korisnika? Da povuce podatke iz fb tokena? -->
+
+    <h:body>
+        <div id="fb-root"></div>
+        <script type="text/javascript">
+            window.fbAsyncInit = function () {
+                FB.init({
+                    appId: '1055274981275002',
+                    cookie: true,
+                    xfbml: true,
+                    version: 'v2.8'
+                });
+
+                FB.getLoginStatus(function (response) {
+                    statusChangeCallback(response);
+                });
+            };
+
+            (function (d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) {
+                    return;
+                }
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "//connect.facebook.net/en_US/sdk.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+
+            function statusChangeCallback(response) {
+                console.log('statusChangeCallback');
+                console.log(response);
+                // The response object is returned with a status field that lets the
+                // app know the current login status of the person.
+                // Full docs on the response object can be found in the documentation
+                // for FB.getLoginStatus().
+                if (response.status === 'connected') {
+                    // Logged into your app and Facebook.
+                    testAPI();
+                    document.getElementById("hidden-button").click();
+                } else {
+                    // The person is not logged into your app or we are unable to tell.
+                    document.getElementById('status').innerHTML = 'Please log ' +
+                            'into this app.';
+                }
+
+            }
+
+
+            // Here we run a very simple test of the Graph API after login is
+            // successful.  See statusChangeCallback() for when this call is made.
+            function testAPI() {
+                console.log('Welcome!  Fetching your information.... ');
+                FB.api('/me', function (response) {
+                    console.log('Successful login for: ' + response.name);
+                    document.getElementById('status').innerHTML =
+                            'Thanks for logging in, ' + response.name + '!';
+                });
+            }
+
+
+            function checkLoginState() {
+                FB.getLoginStatus(function (response) {
+                    statusChangeCallback(response);
+                });
+            }
+
+            function logout() {
+                FB.logout(function (response) {
+                });
+            }
+        </script>
+
+
+        <p:layout fullPage="true"> 
+            <p:layoutUnit  position="north" size="100"  style="border: 0; width: 40%">
+                <p:layout fullPage="false" >
+                    <p:layoutUnit position="center"  style="border: 0; width: 39%">
+                        <pm:field><p:outputLabel><h2><b>Recreations</b></h2></p:outputLabel></pm:field>
+                    </p:layoutUnit>
+                    <p:layoutUnit position="east" style="border: 0;width: 39%">
+                        <!--                      <p:outputLabel value="Login" /> -->
+                        <h:form>
+                            <h:panelGrid columns="3">
+                                <pm:field>
+                                    <p:inputText id="input_user" value="#{mBKorisnik.korisnik.username}" placeholder="#{msg.msg_email}"/>
+                                </pm:field>
+                                <pm:field>
+                                    <p:password id="input_pass" value="#{mBKorisnik.korisnik.password}" placeholder="#{msg.msg_password}"/>
+                                </pm:field>
+                                <pm:field><p:commandButton value="#{msg.msg_login_button}" action="#{mBKorisnik.ulogujSe()}" icon="fa fa-sign-in"/></pm:field>
+                            </h:panelGrid>
+                        </h:form>
+
+                    </p:layoutUnit>
+                </p:layout>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center" resizable="false">
+                <p:outputLabel value="#{msg.welcome_message}" style="size: 20px;" />
+                <br/>
+                <h:form style="float: right;">
+
+
+                    <p:commandLink value="EN" action="#{localization.change(1)}" process="@form" update="@all"/>
+                    <p:separator />
+                    <p:commandLink value="SRB" action="#{localization.change(2)}" process="@form" update="@all"/>
+                </h:form>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="east" resizable="false" size="40%" >
+                <h:form>
+                    <p:spacer />
+                    <!--                <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+                                    </fb:login-button>
+                    -->
+                    <div class="fb-login-button" 
+                         data-max-rows="1" 
+                         data-size="large" 
+                         data-button-type="continue_with" 
+                         data-show-faces="false" 
+                         data-auto-logout-link="true" 
+                         data-use-continue-as="true" 
+                         onclick="checkLoginState();"></div>
+
+
+                    <br/>
+
+                    <p:separator />
+                    <div id="detalji"></div>
+                    <div id="registracija">
+                        <pm:field><h3>#{msg.msg_}</h3></pm:field><br/>
+                        <h:form id="registracija-form">
+                            <p:growl id="messages" showDetail="true" autoUpdate="true" />
+                            <h:panelGrid columns="2" cellpadding="15"  >
+
+                                <p:outputLabel for="name" value="#{msg.msg_name}" style="width: 300px"/>
+                                <p:inputText value="#{mBKorisnik.korisnikZaRegistraciju.osoba.ime}" required="true" id="name" type="text" placeholder="#{msg.msg_name}"/>
+
+                                <p:outputLabel for="surname" value="#{msg.msg_surname} " style="width: 300px"/>
+                                <p:inputText value="#{mBKorisnik.korisnikZaRegistraciju.osoba.prezime}" required="true" id="surname" type="text" placeholder="#{msg.msg_surname}"/>
+
+                                <p:outputLabel for="email" value="#{msg.msg_email}" style="width: 300px"/>
+                                <p:inputText value="#{mBKorisnik.korisnikZaRegistraciju.username}" required="true" id="email" type="email" placeholder="#{msg.msg_email}"/>
+
+                                <p:outputLabel for="pwd1" value="#{msg.msg_password}" style="width: 300px" />
+                                <p:password id="pwd1" value="#{mBKorisnik.korisnikZaRegistraciju.password}" feedback="true" match="pwd2" required="true">
+                                    <p:watermark for="pwd1" value="#{msg.msg_password}" id="watermark" />
+                                </p:password>
+
+                                <p:outputLabel for="pwd2" title="Ponovo ukucati" value="#{msg.msg_password} " style="width: 300px"/>
+                              <p:password id="pwd2" required="true">
+                                    <p:watermark for="pwd2" value="#{msg.retype}" id="watermark2" />
+                                </p:password>
+
+                                <p:outputLabel for="mesta" value="#{msg.msg_city}" style="width: 300px"/>
+                                <p:selectOneMenu id="mesta" value="#{mBKorisnik.korisnikZaRegistraciju.osoba.mesto}" converter="mestoConv" style="width:125px">
+                                    <f:selectItems  var="mesto" value="#{MBSviClanovi.mesta}" itemValue="#{mesto}" itemLabel="#{mesto}" >
+                                        </f:selectItems>
+
+                                </p:selectOneMenu>
+
+
+                            </h:panelGrid>
+                            <p:commandButton ajax="false"  value="#{msg.msg_registration_button}" action="#{mBKorisnik.registrujKorisnika()}"/>
+                        </h:form>
+                    </div> 
+                </h:form>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="south">
+                <pm:footer>footer</pm:footer>
+            </p:layoutUnit>
+
+        </p:layout>
+    </h:body>
+
+
+</html>
+

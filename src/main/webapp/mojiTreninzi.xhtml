@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <title>Moji treninzi</title>
+    </h:head>
+    <h:body>
+
+        <ui:composition template="./osnovniTemplate.xhtml">
+
+            <ui:define name="content">
+
+                <p:panelGrid columns="3">
+                    <p:button outcome="prijavaNaTrening.xhtml" value="#{msg.add_new_workout}" ></p:button>
+                    <p:button value="#{msg.view_workout}"></p:button>
+                    <p:button value="#{msg.view_past_workout}"></p:button>
+                </p:panelGrid>
+
+                <h:form id="form">
+
+                    <p:growl id="selektovan_trening" showDetail="true" />
+
+                    <p:dataTable id="treninzi" var="t" value="#{mbTrening.vratiTreninge(mBKorisnik.korisnik.osoba)}">
+                        <f:facet name="header">
+                            <p:outputLabel value="#{msg.msg_table_trainings} #{mBKorisnik.korisnik.osoba}" />
+                        </f:facet>
+                        <p:column headerText="#{msg.training_date}">
+                            <h:outputText value="#{t.datum}"/>
+                        </p:column>
+
+                        <p:column headerText="#{msg.training_start}">
+                            <h:outputText value="#{t.vremeOd}"/>
+                        </p:column>
+
+                        <p:column headerText="#{msg.training_end}">
+                            <h:outputText value="#{t.vremeDo}"/>
+                        </p:column>
+
+                        <p:column headerText="#{msg.training_sport}" ariaHeaderText="SPORT">
+                            <h:outputText value="#{t.sport.naziv}"/>
+                        </p:column>
+
+                        <p:column style="width:32px;text-align: center">
+                            <p:commandButton update=":form:detalji_treninga" oncomplete="PF('dtDialog').show()" icon="ui-icon-search" title="#{msg.training_details}">
+                                <f:setPropertyActionListener value="#{t}" target="#{mbTrening.selektovanTrening}" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                    <p:dialog header="Informacije o treningu" widgetVar="dtDialog" modal="false" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="detalji_treninga" style="text-align:center;" >
+                            <p:panelGrid  columns="2" rendered="#{not empty mbTrening.selektovanTrening}" >
+
+                                <h:outputText value="#{msg.training_sport}:" />
+                                <h:outputText value="#{mbTrening.selektovanTrening.sport.naziv}" />
+
+                                <h:outputText value="#{msg.training_date}:" />
+                                <h:outputText value="#{mbTrening.selektovanTrening.datum}" />
+
+                                <h:outputText value="Max: " />
+                                <h:outputText value="#{mbTrening.selektovanTrening.sport.maxBrClanova}" />
+                                
+                                
+                            </p:panelGrid>
+                            <p:chart type="pie" rendered="#{not empty mbTrening.selektovanTrening}"  model="#{mbPopunjenostTreningaPita.model}" style="width: 400px; height: 300px"/>
+                        </p:outputPanel>
+                    </p:dialog>
+                </h:form>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </h:body>
+</html>

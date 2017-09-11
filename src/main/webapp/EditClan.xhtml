@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Izmena podataka korisnika</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/osnovniTemplate.xhtml">
+
+            <ui:define name="content">
+                <h:form id="izmena" style="align-content: center;">
+                    <p:outputLabel value="#{msg.edit_user_data}"  style="font-size: 20px;"/>
+                    <p:panelGrid layout="grid" columns="2" >
+
+                        <p:outputLabel value="#{msg.msg_name}: " /> 
+                        <p:inputText value="#{mBKorisnik.profilKorisnik.osoba.ime}" />
+
+                        <p:outputLabel value="#{msg.msg_surname}: " /> 
+                        <p:inputText value="#{mBKorisnik.profilKorisnik.osoba.prezime}" />
+
+                        <p:outputLabel value="#{msg.msg_email}: " /> 
+                        <p:inputText value="#{mBKorisnik.profilKorisnik.username}" />
+
+                        <p:outputLabel value="#{msg.msg_birthday}: " /> 
+                        <p:calendar id="popup" 
+                                    pattern="dd-MM-yyyy" 
+                                    effect="fold" 
+                                    value="#{mBKorisnik.profilKorisnik.osoba.datumRodjenja}" 
+                                    converter="ldConv" 
+                                    converterMessage="Pogresan format datuma"
+                                    />
+                        <p:message for="popup"> </p:message>                                
+                        <p:selectOneMenu id="mesta" value="#{mBKorisnik.profilKorisnik.osoba.mesto}" converter="mestoConv" style="width:125px">
+                            <f:selectItems  var="mesto" value="#{MBSviClanovi.mesta}" itemValue="#{mesto}" itemLabel="#{mesto}" />
+                        </p:selectOneMenu>
+                        <p:message for="mesta"> </p:message>
+                    </p:panelGrid> 
+                    <p:commandButton id="save_button" 
+
+                                     value="#{msg.edit_profile_button}" icon="fa fa-save" 
+                                     action="#{mBKorisnik.saveChanges}" process="@form" update="@form"
+                                     />
+                    <p:separator />
+
+                </h:form> 
+                <h:form>
+                    <p:outputLabel value="#{msg.edit_password}" style="font-size: 20px;" />
+                    <p:panelGrid layout="grid" columns="2" >
+                        <p:outputLabel value="#{msg.edit_old_password}:" /> 
+                        <p:password value="#{mBKorisnik.profilKorisnik.password}" />
+
+                        <p:outputLabel for="pwd1" value="#{msg.edit_new_password}: " style="width: 300px" />
+                        <p:password id="pwd1" value="#{mBKorisnik.profilKorisnik.password}" feedback="true" match="pwd2" >
+                            <p:watermark for="pwd1" value="Password" id="watermark" />
+                        </p:password>
+                        <p:message for="pwd1"> </p:message>
+
+                        <p:outputLabel for="pwd2" title="Ponovo ukucati" value="#{msg.edit_new_password}: " style="width: 300px"/>
+                        <p:password id="pwd2">
+                            <p:watermark for="pwd2" value="#{msg.retype}" id="watermark2" />
+                        </p:password>
+                        <p:message for="pwd2"> </p:message>
+
+                    </p:panelGrid>
+
+                    <p:commandButton value="Change password"  />
+                </h:form>
+                <h:form>
+                    <p:commandButton id="delete_profile" 
+                                     type="button"
+                                     value="#{msg.delete_profile}" 
+                                     action="#{mBKorisnik.deleteUser}"
+                                     style="color: red; width: 200px; height: 50px;" 
+                                     icon="fa fa-trash">
+                        <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-alert" />    
+                    </p:commandButton>
+                    <p:growl id="msg" showDetail="true"   />
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="#{msg.Yes}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="#{msg.No}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+                </h:form>
+            </ui:define>
+            <ui:define name="right">
+                <h:form>
+                    <p:commandButton value="Back to profile" ajax="false" action="#{navigacija.profilna()}"/>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+
+
+    </h:body>
+</html>
+
