@@ -146,7 +146,7 @@ public class Osoba implements Serializable{
    
     @Override
     public String toString() {
-        return ""+ idOsoba;
+        return ""+ idOsoba + ime + prezime;
     }
 
     public String getName(){

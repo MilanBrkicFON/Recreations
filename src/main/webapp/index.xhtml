@@ -166,7 +166,7 @@
                                 </p:password>
 
                                 <p:outputLabel for="mesta" value="#{msg.msg_city}" style="width: 300px"/>
-                                <p:selectOneMenu id="mesta" value="#{mBKorisnik.korisnikZaRegistraciju.osoba.mesto}" converter="mestoConv" style="width:125px">
+                                <p:selectOneMenu id="mesta" value="#{mBKorisnik.korisnikZaRegistraciju.osoba.mesto}" converter="#{mestoConv}" style="width:125px">
                                     <f:selectItems  var="mesto" value="#{MBSviClanovi.mesta}" itemValue="#{mesto}" itemLabel="#{mesto}" >
                                         </f:selectItems>
 

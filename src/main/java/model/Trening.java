@@ -19,6 +19,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
@@ -29,7 +31,8 @@ import javax.persistence.Table;
 )
 public class Trening implements Serializable {
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany()
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
             name = "tclan",
             joinColumns = {
@@ -39,7 +42,8 @@ public class Trening implements Serializable {
     )
     private List<Clan> clanovi;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany()
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
             name = "tt",
             joinColumns = {

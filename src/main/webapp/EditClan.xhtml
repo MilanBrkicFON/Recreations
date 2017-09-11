@@ -30,11 +30,11 @@
                                     pattern="dd-MM-yyyy" 
                                     effect="fold" 
                                     value="#{mBKorisnik.profilKorisnik.osoba.datumRodjenja}" 
-                                    converter="ldConv" 
+                                    converter="#{localDateConverter}" 
                                     converterMessage="Pogresan format datuma"
                                     />
                         <p:message for="popup"> </p:message>                                
-                        <p:selectOneMenu id="mesta" value="#{mBKorisnik.profilKorisnik.osoba.mesto}" converter="mestoConv" style="width:125px">
+                        <p:selectOneMenu id="mesta" value="#{mBKorisnik.profilKorisnik.osoba.mesto}" converter="#{mestoConv}" style="width:125px">
                             <f:selectItems  var="mesto" value="#{MBSviClanovi.mesta}" itemValue="#{mesto}" itemLabel="#{mesto}" />
                         </p:selectOneMenu>
                         <p:message for="mesta"> </p:message>
@@ -57,13 +57,11 @@
                         <p:password id="pwd1" value="#{mBKorisnik.profilKorisnik.password}" feedback="true" match="pwd2" >
                             <p:watermark for="pwd1" value="Password" id="watermark" />
                         </p:password>
-                        <p:message for="pwd1"> </p:message>
 
                         <p:outputLabel for="pwd2" title="Ponovo ukucati" value="#{msg.edit_new_password}: " style="width: 300px"/>
                         <p:password id="pwd2">
                             <p:watermark for="pwd2" value="#{msg.retype}" id="watermark2" />
                         </p:password>
-                        <p:message for="pwd2"> </p:message>
 
                     </p:panelGrid>
 

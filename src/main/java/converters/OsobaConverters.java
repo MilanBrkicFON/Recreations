@@ -6,6 +6,7 @@
 package converters;
 
 import java.util.List;
+import javax.enterprise.context.ApplicationScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -23,7 +24,7 @@ import utility.Kontroler;
  * @author Milan
  */
 @Named
-@FacesConverter(value = "osobaConv", forClass = Osoba.class)
+@ApplicationScoped
 public class OsobaConverters implements Converter {
 
     @Inject

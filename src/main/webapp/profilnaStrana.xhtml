@@ -13,31 +13,33 @@
         <ui:composition template="/osnovniTemplate.xhtml">
 
             <ui:define name="content">
-
-                <h1>#{msg.welcome}:#{mBKorisnik.profilKorisnik.osoba.ime} #{mBKorisnik.profilKorisnik.osoba.prezime}</h1>
-
+                <h:form>
+                    <h1>#{msg.welcome}:#{mBKorisnik.profilKorisnik.osoba.ime} #{mBKorisnik.profilKorisnik.osoba.prezime}</h1>
+                </h:form>
 
 
             </ui:define>
 
             <ui:define name="left"  >
-                <p:graphicImage name="user.png" library="images" height="200px" width="165px"  />
+                <h:form>
+                    <p:graphicImage name="user.png" library="images" height="200px" width="165px"  />
 
-                <p:panelGrid columns="2" layout="grid">
-                    <p:outputLabel value="#{msg.msg_name}: " />
-                    <p:outputLabel id="name" value="#{mBKorisnik.profilKorisnik.osoba.name}" />
+                    <p:panelGrid columns="2" layout="grid">
+                        <p:outputLabel value="#{msg.msg_name}: " />
+                        <p:outputLabel id="name" value="#{mBKorisnik.profilKorisnik.osoba.name}" />
 
-                    <p:outputLabel value="Age: " />
-                    <p:outputLabel id="age" value="#{mBKorisnik.getAge()}" />
+                        <p:outputLabel value="Age: " />
+                        <p:outputLabel id="age" value="#{mBKorisnik.getAge()}" />
 
-                    <p:outputLabel value="Rating: " />
-                    <p:outputLabel id="rating" value="#{mBKorisnik.profilKorisnik.osoba.rating}" rendered="#{mBKorisnik.profileSameAsUser}"/>
-                    <p:rating stars="10" id="rating-friend" onRate="alert('You have rated friend!')" rendered="#{mBKorisnik.areFriends()}" /> 
-                    <p:outputLabel value="Stamina: " />
-                    <p:outputLabel  value="#{mBKorisnik.profilKorisnik.osoba.stamina}" />
+                        <p:outputLabel value="Rating: " />
+                        <p:outputLabel id="rating" value="#{mBKorisnik.profilKorisnik.osoba.rating}" rendered="#{mBKorisnik.profileSameAsUser}"/>
+                        <p:rating stars="10" id="rating-friend" onRate="alert('You have rated friend!')" rendered="#{mBKorisnik.areFriends()}" /> 
+                        <p:outputLabel value="Stamina: " />
+                        <p:outputLabel  value="#{mBKorisnik.profilKorisnik.osoba.stamina}" />
 
 
-                </p:panelGrid>
+                    </p:panelGrid>
+                </h:form>
             </ui:define>
             <ui:define name="right">
                 <h:form>

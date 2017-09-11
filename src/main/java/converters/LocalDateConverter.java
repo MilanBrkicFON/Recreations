@@ -8,6 +8,7 @@ package converters;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import javax.enterprise.context.ApplicationScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -19,7 +20,7 @@ import javax.inject.Named;
  * @author Milan
  */
 @Named
-@FacesConverter(forClass = LocalDate.class, value = "ldConv")
+@ApplicationScoped
 public class LocalDateConverter implements Serializable, Converter {
 
     @Override

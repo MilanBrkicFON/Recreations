@@ -68,10 +68,10 @@
                                     itemLabel="#{o.getName()}"
                                     itemValue="#{o}"
                                     queryDelay="1000"
-                                    converter="osobaConv">
+                                    converter="#{osobaConverters}">
 
                                     <!-- pozovi mbKorisnk za izmenu profilnog korisnika -->
-                                    <p:ajax event="itemSelect" process="@all" listener="#{autoCompleteView.onItemSelect}" update="msgs" />
+                                    <p:ajax event="itemSelect" process="@all" listener="#{autoCompleteView.onItemSelect}" update="@all" />
                                 </p:autoComplete>
                                 <p:commandButton value="#{msg.msg_logout_button}" action="#{mBKorisnik.logout()}" ajax="false" icon="fa fa-sign-out"/> 
                                 <p:growl id="msgs" showDetail="true" />

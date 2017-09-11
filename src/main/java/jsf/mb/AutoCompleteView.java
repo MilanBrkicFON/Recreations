@@ -17,6 +17,7 @@ import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import model.Clan;
+import model.Korisnik;
 import model.Osoba;
 import org.primefaces.event.SelectEvent;
 import utility.Kontroler;
@@ -48,22 +49,19 @@ public class AutoCompleteView implements Serializable {
         return filtriraneOsobe;
     }
 
-    public List<String> comleteText(String text) {
-        List<String> t = new ArrayList();
-
-        for (int i = 0; i < 10; i++) {
-            t.add(text + i);
-        }
-        return t;
-    }
 
     public void onItemSelect(SelectEvent event) throws IOException {
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Item Selected", ((Osoba) event.getObject()).getName()));
 
-        mb.getProfilKorisnik().setOsoba((Osoba) event.getObject());
+        if (event.getObject() instanceof Osoba) {
+            Korisnik kor = kontroler.getSelectedUser((Osoba)event.getObject());
+            System.out.println(kor);
+            mb.setProfilKorisnik(kor);
+            FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), "", "profilnaStrana.xhtml");
+            
+        }
 
-        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-        ec.redirect(ec.getRequestContextPath() + "/profilnaStrana.xhtml");
+  //      ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+  //      ec.redirect(ec.getRequestContextPath() + "/profilnaStrana.xhtml");
 
     }
 

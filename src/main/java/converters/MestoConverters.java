@@ -7,6 +7,7 @@ package converters;
 
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -23,7 +24,7 @@ import utility.Kontroler;
  * @author Milan
  */
 @Named(value = "mestoConv")
-@FacesConverter(value = "mestoConv", forClass = Mesto.class)
+@ApplicationScoped
 public class MestoConverters implements Converter {
     @Inject
     private Kontroler kontroler;

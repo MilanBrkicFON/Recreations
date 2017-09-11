@@ -18,7 +18,7 @@
             <ui:define name="content">
                 <h:form>
                     Choose your sport:
-                    <p:selectOneMenu id="sports" value="#{mBPrijavaNaTrening.trening.sport}" converter="sportConv" style="width: 125px" >
+                    <p:selectOneMenu id="sports" value="#{mBPrijavaNaTrening.trening.sport}" converter="#{sportConverters}" style="width: 125px" >
                         <f:selectItem itemLabel="Select sport..." itemValue="#{null}" />
                         <f:selectItems var="s" value="#{mbSport.sports}" itemValue="#{s}" itemLabel="#{s}" />
                     </p:selectOneMenu>
