@@ -5,6 +5,7 @@
  */
 package jsf.mb;
 
+import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
@@ -19,7 +20,7 @@ import utility.Kontroler;
  */
 @Named(value = "mbSport")
 @RequestScoped
-public class mbSport {
+public class mbSport implements Serializable{
 
     @Inject
     private Kontroler kontroler;

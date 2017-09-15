@@ -21,10 +21,12 @@ public class Localization implements Serializable {
     public static final int ENG = 1;
     public static final int SERBIAN = 2;
     
+    private String current;
     /**
      * Creates a new instance of Localization
      */
     public Localization() {
+        current = "ENG";
     }
     
     
@@ -33,11 +35,23 @@ public class Localization implements Serializable {
         switch(language){
             case ENG:
                 FacesContext.getCurrentInstance().getViewRoot().setLocale(Locale.ENGLISH);
+                setCurrent("ENG");
                 break;
             case SERBIAN :
                 FacesContext.getCurrentInstance().getViewRoot().setLocale(new Locale("sr", "RS"));
+                setCurrent("SRB");
                 break;
                 
         }
     }
+
+    public String getCurrent() {
+        return current;
+    }
+
+    public void setCurrent(String current) {
+        this.current = current;
+    }
+    
+    
 }

@@ -5,15 +5,16 @@
  */
 package jsf.mb;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
-import javax.enterprise.context.RequestScoped;
+import javax.inject.Singleton;
 
 /**
  *
  * @author Milan
  */
 @Named(value = "navigacija")
-@RequestScoped
+@ApplicationScoped
 public class Navigacija {
 
     /**
@@ -37,5 +38,9 @@ public class Navigacija {
     
     public String mojiTreninzi(){
         return "mojiTreninzi.xhtml?faces-redirect=true";
+    }
+    
+    public String index(){
+        return "index.xhtml?faces-redirect=true";
     }
 }

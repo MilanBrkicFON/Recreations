@@ -70,9 +70,23 @@ public class Trening implements Serializable {
     @Column(name = "treningId")
     private int treningId;
     
+    private String nazivTreninga;
+    
     public Trening() {
     }
 
+    public Trening(int treningId) {
+        this.treningId = treningId;
+    }
+
+    public Trening(LocalTime vremeOd, LocalTime vremeDo, LocalDate datum, String nazivTreninga) {
+        this.vremeOd = vremeOd;
+        this.vremeDo = vremeDo;
+        this.datum = datum;
+        this.nazivTreninga = nazivTreninga;
+    }
+
+    
     public Trening(LocalTime vremeOd, LocalTime vremeDo, LocalDate datum) {
         this.vremeOd = vremeOd;
         this.vremeDo = vremeDo;
@@ -148,6 +162,15 @@ public class Trening implements Serializable {
         this.sport = sport;
     }
 
+    public String getNazivTreninga() {
+        return nazivTreninga;
+    }
+
+    public void setNazivTreninga(String nazivTreninga) {
+        this.nazivTreninga = nazivTreninga;
+    }
+
+    
     @Override
     public int hashCode() {
         int hash = 7;

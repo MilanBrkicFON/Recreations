@@ -36,6 +36,8 @@ public class AutoCompleteView implements Serializable {
 
     @Inject
     private MBKorisnik mb;
+    @Inject
+    private Navigacija nav;
 
     /**
      * Creates a new instance of AutoCompleteView
@@ -49,19 +51,15 @@ public class AutoCompleteView implements Serializable {
         return filtriraneOsobe;
     }
 
-
     public void onItemSelect(SelectEvent event) throws IOException {
-
-        if (event.getObject() instanceof Osoba) {
-            Korisnik kor = kontroler.getSelectedUser((Osoba)event.getObject());
-            System.out.println(kor);
-            mb.setProfilKorisnik(kor);
-            FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), "", "profilnaStrana.xhtml");
-            
-        }
-
-  //      ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-  //      ec.redirect(ec.getRequestContextPath() + "/profilnaStrana.xhtml");
+        System.out.println("---- POZVALA SE METODA ZA AUTOCOMPLETE ----");
+        System.out.println("Osoba iz klase: " + osoba);
+        
+        Korisnik kor = kontroler.getSelectedUser(osoba);
+        mb.setProfilKorisnik(kor);
+        System.out.println("--- PROFILNI KORISNIK SETOVAN NA: " + kor);
+        FacesContext.getCurrentInstance().getApplication()
+                .getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), "", nav.profilna());
 
     }
 

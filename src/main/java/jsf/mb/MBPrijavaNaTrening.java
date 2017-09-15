@@ -6,48 +6,40 @@
 package jsf.mb;
 
 import javax.inject.Named;
-import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import model.Trening;
-import utility.Kontroler;
+import java.util.HashMap;
+import java.util.Map;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
 
 /**
  *
  * @author Milan
  */
 @Named(value = "mBPrijavaNaTrening")
-@SessionScoped
+@ViewScoped
 public class MBPrijavaNaTrening implements Serializable {
 
-    @Inject
-    private Kontroler kontroler;
-    
-    private Trening trening;
-    /**
-     * Creates a new instance of MBPrijavaNaTrening
-     */
-    public MBPrijavaNaTrening() {
-    }
-    
-    @PostConstruct
-    public void init(){
-        trening = new Trening();
-    }
-    public void prijaviSeNaTrening(){
-        System.out.println("--- POZVANA METODA PRIJAVANATRENING() ---");
+    public void izaberiTrening(){
+        try{
+        Map<String,Object> opcije = new HashMap<>();
+        opcije.put("resizable", true);
+        opcije.put("dragable", true);
+        opcije.put("modal", true);
+        opcije.put("contentWidth", "100%");
+        opcije.put("width", "70%");
         
+        //null - moze se poslati parametri na dijalog! Ako zatreba
+        RequestContext.getCurrentInstance().openDialog("prijavaNaTrening", opcije, null);
+        }catch(Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("greska: "+e.getMessage()));
+        } 
+    }
+    
+    public void naIzabranTrening(SelectEvent evt){
         
     }
-
-    public Trening getTrening() {
-        return trening;
-    }
-
-    public void setTrening(Trening trening) {
-        this.trening = trening;
-    }
-    
-    
 }

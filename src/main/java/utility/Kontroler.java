@@ -7,6 +7,7 @@ package utility;
 
 import com.password.hashing.PasswordHashing;
 import java.io.Serializable;
+import java.util.ArrayList;
 import model.Clan;
 import model.Korisnik;
 import model.Mesto;
@@ -97,12 +98,34 @@ public class Kontroler implements Serializable {
             tx = session.beginTransaction();
             PasswordHashing ph = new PasswordHashing(korisnik.getPassword());
             korisnik.setPassword(ph.generateHash());
-            session.saveOrUpdate(korisnik);
+            session.save(korisnik);
             tx.commit();
+            System.out.println("uspesno je uradjena izmena podataka." + this.getClass());
         } catch (Exception e) {
             if (tx != null) {
                 tx.rollback();
             }
+            System.out.println("NIJE USPESNO uradjena izmena podataka." + this.getClass());
+        } finally {
+            session.close();
+        }
+    }
+
+    public void izmeniKorisnika(Korisnik korisnik) {
+        session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
+
+        try {
+            tx = session.beginTransaction();
+            session.update(korisnik.getOsoba());
+            session.update(korisnik);
+            tx.commit();
+            System.out.println("uspesno je uradjena izmena podataka." + this.getClass());
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            System.out.println("NIJE USPESNO uradjena izmena podataka." + this.getClass());
         } finally {
             session.close();
         }
@@ -306,7 +329,101 @@ public class Kontroler implements Serializable {
             return k;
         } catch (Exception e) {
             return null;
-        }finally{
+        } finally {
+            session.close();
+        }
+    }
+
+    public void promeniLozinku(String newPass, Korisnik profilKorisnik) throws Exception {
+        session = HibernateUtil.getSessionFactory().openSession();
+
+        Transaction tx = null;
+
+        try {
+            tx = session.beginTransaction();
+            PasswordHashing ph = new PasswordHashing(newPass);
+            String hash = ph.generateHash();
+            profilKorisnik.setPassword(hash);
+            session.update("password", profilKorisnik);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+                throw e;
+            }
+        } finally {
+            session.close();
+        }
+    }
+
+    public List<Relationship> getAllFriendsRequest(Osoba osoba) {
+        session = HibernateUtil.getSessionFactory().openSession();
+
+        session.beginTransaction();
+        List<Relationship> friendsReq = new ArrayList<>();
+        TypedQuery<Relationship> query;
+
+        query = session.createQuery("from Relationship where (osoba_1_id = :s or osoba_2_id= :s) and status = :p and akcija_osoba_id <> :s")
+                .setParameter("s", osoba)
+                .setParameter("p", Relationship.Status.PENDDING);
+        friendsReq = query.getResultList();
+        session.close();
+
+        return friendsReq;
+    }
+
+    public void addFriend(Korisnik korisnik, Korisnik profilKorisnik) {
+
+        session = HibernateUtil.getSessionFactory().getCurrentSession();
+
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.save(new Relationship(korisnik.getOsoba(), profilKorisnik.getOsoba(), Relationship.Status.PENDDING, korisnik.getOsoba()));
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+        } finally {
+            session.close();
+        }
+
+    }
+
+    public void sacuvaj(Relationship rel) {
+        session = HibernateUtil.getSessionFactory().getCurrentSession();
+
+        Transaction tx = null;
+
+        try {
+            tx = session.beginTransaction();
+            session.update(rel);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+        } finally {
+            session.close();
+        }
+    }
+
+    public void izmeni(Trening trening) {
+        session = HibernateUtil.getSessionFactory().getCurrentSession();
+        
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            
+            session.update(trening);
+            
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+        } finally{
             session.close();
         }
     }

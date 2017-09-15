@@ -6,6 +6,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -81,10 +82,38 @@ public class Relationship implements Serializable {
     public String toString() {
         return "Relationship{" + "osoba_1_id=" + osoba_1_id + ", osoba_2_id=" + osoba_2_id + ", status=" + status + ", akcija_osoba_id=" + akcija_osoba_id + '}';
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 47 * hash + Objects.hashCode(this.osoba_1_id);
+        hash = 47 * hash + Objects.hashCode(this.osoba_2_id);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Relationship other = (Relationship) obj;
+        if (!Objects.equals(this.osoba_1_id, other.osoba_1_id)) {
+            return false;
+        }
+        if (!Objects.equals(this.osoba_2_id, other.osoba_2_id)) {
+            return false;
+        }
+        return true;
+    }
     
     
-    
-    private interface Status {
+    public static interface Status {
         public static final int NOT_FRIENDS = 0;
         public static final int FRIENDS = 1;
         public static final int PENDDING = 2;

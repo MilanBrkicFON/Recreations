@@ -15,10 +15,16 @@
 
             <ui:define name="content">
 
-                <p:panelGrid columns="3">
-                    <p:button outcome="prijavaNaTrening.xhtml" value="#{msg.add_new_workout}" ></p:button>
-                    <p:button value="#{msg.view_workout}"></p:button>
-                    <p:button value="#{msg.view_past_workout}"></p:button>
+                <p:panelGrid columns="3" style="border: none;" >
+                    <h:form>
+                        <p:commandButton  value="#{msg.add_new_workout}" actionListener="#{mBPrijavaNaTrening.izaberiTrening()}" 
+                                          icon="fa fa-external-link" >
+                            <p:ajax event="dialogReturn" listener="#{mBPrijavaNaTrening.naIzabranTrening}" update="growl" />
+                        </p:commandButton>
+                        <p:button value="#{msg.view_workout}"></p:button>
+                        <p:button value="#{msg.view_past_workout}"></p:button>
+                    </h:form>
+                    <p:growl id="growl" showDetail="true" />
                 </p:panelGrid>
 
                 <h:form id="form">
@@ -63,8 +69,8 @@
 
                                 <h:outputText value="Max: " />
                                 <h:outputText value="#{mbTrening.selektovanTrening.sport.maxBrClanova}" />
-                                
-                                
+
+
                             </p:panelGrid>
                             <p:chart type="pie" rendered="#{not empty mbTrening.selektovanTrening}"  model="#{mbPopunjenostTreningaPita.model}" style="width: 400px; height: 300px"/>
                         </p:outputPanel>

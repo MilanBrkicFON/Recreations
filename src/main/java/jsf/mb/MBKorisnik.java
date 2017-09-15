@@ -41,6 +41,8 @@ public class MBKorisnik implements Serializable {
 
     @Inject
     private Kontroler kontroler;
+    @Inject
+    private Navigacija navigacija;
 
     /**
      * Creates a new instance of MBKorisnik
@@ -96,7 +98,7 @@ public class MBKorisnik implements Serializable {
 
             korisnik = korisnikIzBaze;
             profilKorisnik = korisnik;
-            return "profilnaStrana.xhtml?faces-redirect=true";
+            return navigacija.profilna();
         } catch (Exception ex) {
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), ""));
@@ -110,7 +112,7 @@ public class MBKorisnik implements Serializable {
         korisnik = new Korisnik();
         ((HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true)).invalidate();
 
-        return "/index.xhtml";
+        return navigacija.index();
     }
 
     public String registrujKorisnika() {
@@ -121,7 +123,7 @@ public class MBKorisnik implements Serializable {
             kontroler.sacuvajKorisnika(korisnikZaRegistraciju);
             korisnik = korisnikZaRegistraciju;
             System.out.println("USPESNO IZVRSENA METODA");
-            return "pocetna.xhtml";
+            return navigacija.editKorisnika();
         } catch (Exception ex) {
             FacesContext context = FacesContext.getCurrentInstance();
             System.out.println("NEUSPESNO IZVRSENA METODA");
@@ -132,7 +134,7 @@ public class MBKorisnik implements Serializable {
         return null;
     }
 
-    public String proveriLozinku() {
+    public String promeniLozinku() {
         if (lozinkaZaUlazUIzmenu.equals(korisnik.getPassword())) {
             return "/clan/Edit.xhtml";
         } else {
@@ -145,9 +147,7 @@ public class MBKorisnik implements Serializable {
     public void saveChanges() {
         try {
             System.out.println("---- POZVALA SE METODA ZA saveChanges()! ----");
-            kontroler.sacuvajKorisnika(korisnik);
-
-            System.out.println("USPESNO IZVRSENA METODA");
+            kontroler.izmeniKorisnika(korisnik);
             FacesContext context = FacesContext.getCurrentInstance();
             //ResourceBundle bundle = context.getApplication().getResourceBundle(context, "msg");
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Uspesno ste izmenili podatke!", ""));
@@ -167,10 +167,27 @@ public class MBKorisnik implements Serializable {
             kontroler.deleteUser(profilKorisnik);
 
             System.out.println("uspesno izvrsena metoda");
+
+            FacesContext.getCurrentInstance()
+                    .getApplication()
+                    .getNavigationHandler()
+                    .handleNavigation(FacesContext.getCurrentInstance(), "", "index.xhtml");
         } catch (Exception e) {
 
         }
         return null;
+    }
+
+    public void addFriend() {
+        try {
+            kontroler.addFriend(korisnik, profilKorisnik);
+
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Posali ste zahtev za prijatelja " + profilKorisnik.getOsoba().toString(), ""));
+        } catch (Exception e) {
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Greska tokom slanja zahteva prijateljstva!", e.getMessage()));
+        }
     }
 
     public String getAge() {
@@ -179,7 +196,7 @@ public class MBKorisnik implements Serializable {
 
     public String pokreniProfilnuStranu() {
         profilKorisnik = korisnik;
-        return "profilnaStrana.xhtml";
+        return navigacija.profilna();
     }
 
     public List<Korisnik> getListaKorisnika() {
@@ -190,16 +207,19 @@ public class MBKorisnik implements Serializable {
         this.listaKorisnika = listaKorisnika;
     }
 
-    public boolean isProfileSameAsUser(){
+    public boolean isProfileSameAsUser() {
         return korisnik.equals(profilKorisnik);
     }
 
-    public boolean areFriends(){
-        Relationship rel = kontroler.areFriends(korisnik,profilKorisnik);
-        
+    public boolean areFriends() {
+        if (profilKorisnik.equals(korisnik)) {
+            return true;
+        }
+        Relationship rel = kontroler.areFriends(korisnik, profilKorisnik);
+
         return rel != null;
     }
-    
+
     /* public String getParams() {
     System.out.println("--- POZVANA METODA GETPARAMS() ---");
     try {

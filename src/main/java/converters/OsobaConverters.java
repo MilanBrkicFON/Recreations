@@ -41,7 +41,6 @@ public class OsobaConverters implements Converter {
         }
 
         try {
-            Kontroler k = new Kontroler();
             return kontroler.pronadjiOsobu(Integer.parseInt(value));
         } catch (NumberFormatException nfe) {
             throw new ConverterException(new FacesMessage(value + " is not a valid Osoba"));
