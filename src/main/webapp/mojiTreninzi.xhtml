@@ -23,8 +23,9 @@
                         </p:commandButton>
                         <p:button value="#{msg.view_workout}"></p:button>
                         <p:button value="#{msg.view_past_workout}"></p:button>
+                        <p:growl id="growl" showDetail="true" />
                     </h:form>
-                    <p:growl id="growl" showDetail="true" />
+
                 </p:panelGrid>
 
                 <h:form id="form">
@@ -60,7 +61,12 @@
                     <p:dialog header="Informacije o treningu" widgetVar="dtDialog" modal="false" showEffect="fade" hideEffect="fade" resizable="false">
                         <p:outputPanel id="detalji_treninga" style="text-align:center;" >
                             <p:panelGrid  columns="2" rendered="#{not empty mbTrening.selektovanTrening}" >
-
+                                <f:facet name="header">
+                                    <p:chart type="pie" 
+                                             rendered="#{not empty mbTrening.selektovanTrening}"  
+                                             model="#{mbPopunjenostTreningaPita.model}" 
+                                             style="width: 400px; height: 300px"/>
+                                </f:facet>
                                 <h:outputText value="#{msg.training_sport}:" />
                                 <h:outputText value="#{mbTrening.selektovanTrening.sport.naziv}" />
 
@@ -72,7 +78,7 @@
 
 
                             </p:panelGrid>
-                            <p:chart type="pie" rendered="#{not empty mbTrening.selektovanTrening}"  model="#{mbPopunjenostTreningaPita.model}" style="width: 400px; height: 300px"/>
+
                         </p:outputPanel>
                     </p:dialog>
                 </h:form>

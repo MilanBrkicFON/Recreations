@@ -53,5 +53,10 @@ public class Localization implements Serializable {
         this.current = current;
     }
     
-    
+    public Locale getLocale(){
+        if (current.equals("ENG")) {
+            return Locale.ENGLISH;
+        }
+        return new Locale("sr", "RS");
+    }
 }

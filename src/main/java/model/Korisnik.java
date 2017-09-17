@@ -29,6 +29,8 @@ public class Korisnik implements Serializable {
     @ManyToOne
     private Osoba osoba;
 
+    private String role;
+
     public Korisnik() {
         osoba = new Osoba();
     }
@@ -44,7 +46,6 @@ public class Korisnik implements Serializable {
         this.osoba = osoba;
     }
 
-    
     public String getUsername() {
         return username;
     }
@@ -69,9 +70,19 @@ public class Korisnik implements Serializable {
         this.osoba = osoba;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Override
     public String toString() {
         return "@" + username + " - " + osoba;
     }
 
+    public static final String ADMIN = "admin";
+    public static final String NORMAL = "normal";
 }

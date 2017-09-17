@@ -13,6 +13,7 @@
         <ui:composition template="/osnovniTemplate.xhtml">
 
             <ui:define name="content">
+                <p:outputLabel value="#{mBKorisnik.profilKorisnik.osoba.name}" style="font-size: 40px" />
                 <h:form rendered="#{not mBKorisnik.areFriends()}">
                     <p:panelGrid columns="1" layout="grid" style="border: none;" >
                         <p:outputLabel value="#{msg.add-as-friend-msg}" />
@@ -31,8 +32,8 @@
                         <p:outputLabel value="#{msg.msg_name}: " />
                         <p:outputLabel id="name" value="#{mBKorisnik.profilKorisnik.osoba.name}" />
 
-                        <p:outputLabel value="Age: " />
-                        <p:outputLabel id="age" value="#{mBKorisnik.getAge()}" />
+                        <p:outputLabel value="Age: " rendered="#{not empty mBKorisnik.korisnik.osoba.datumRodjenja}" />
+                        <p:outputLabel id="age" value="#{mBKorisnik.getAge()}" rendered="#{not empty mBKorisnik.korisnik.osoba.datumRodjenja}"/>
 
                         <p:outputLabel value="Rating: " />
                         <p:outputLabel id="rating" value="#{mBKorisnik.profilKorisnik.osoba.rating}" rendered="#{mBKorisnik.profileSameAsUser}"/>
@@ -40,13 +41,11 @@
                         <p:outputLabel value="Stamina: " />
                         <p:outputLabel  value="#{mBKorisnik.profilKorisnik.osoba.stamina}" />
 
-
                     </p:panelGrid>
                 </h:form>
             </ui:define>
             <ui:define name="right">
                 <h:form>
-
                     <p:link value="#{msg.edit_profile_button}"   outcome="#{navigacija.editKorisnika()}"  />
                 </h:form>
             </ui:define>

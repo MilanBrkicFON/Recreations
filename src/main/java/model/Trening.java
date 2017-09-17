@@ -31,25 +31,23 @@ import org.hibernate.annotations.LazyCollectionOption;
 )
 public class Trening implements Serializable {
 
-    @ManyToMany()
-    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany(fetch = FetchType.LAZY)
+    //@LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
             name = "tclan",
             joinColumns = {
                 @JoinColumn(name = "treningId", referencedColumnName = "treningId")},
             inverseJoinColumns = {
-                @JoinColumn(name = "clanId", referencedColumnName = "clanid")}
+                @JoinColumn(name = "clanId", referencedColumnName = "idOsoba")}
     )
     private List<Clan> clanovi;
 
-    @ManyToMany()
-    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany(fetch = FetchType.LAZY)
+    //@LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(
             name = "tt",
-            joinColumns = {
-                @JoinColumn(name = "treningId", referencedColumnName = "treningId")},
-            inverseJoinColumns = {
-                @JoinColumn(name = "trenerId", referencedColumnName = "trenerID")}
+            joinColumns = @JoinColumn(name = "treningId", referencedColumnName = "treningId"),
+            inverseJoinColumns =@JoinColumn(name = "trenerId", referencedColumnName = "idOsoba")
     )
     private List<Trener> treneri;
 

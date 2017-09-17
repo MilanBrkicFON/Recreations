@@ -43,4 +43,8 @@ public class Navigacija {
     public String index(){
         return "index.xhtml?faces-redirect=true";
     }
+    public String dodajTrening(){
+        return "admin/dodajTrening.xhtml?faces-redirect=true";
+    }
+    
 }

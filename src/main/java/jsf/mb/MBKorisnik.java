@@ -7,10 +7,6 @@ package jsf.mb;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -18,10 +14,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
-import model.Clan;
 import model.Korisnik;
-import model.Mesto;
-import model.Osoba;
 import model.Relationship;
 import utility.Kontroler;
 
@@ -37,7 +30,6 @@ public class MBKorisnik implements Serializable {
     private Korisnik profilKorisnik;
     private Korisnik korisnikZaRegistraciju;
     private String lozinkaZaUlazUIzmenu;
-    private List<Korisnik> listaKorisnika;
 
     @Inject
     private Kontroler kontroler;
@@ -72,6 +64,7 @@ public class MBKorisnik implements Serializable {
     }
 
     public void setProfilKorisnik(Korisnik profilKorisnik) {
+        System.out.println("SET PROFILNI: "+ profilKorisnik.getOsoba().getName());
         this.profilKorisnik = profilKorisnik;
     }
 
@@ -98,6 +91,7 @@ public class MBKorisnik implements Serializable {
 
             korisnik = korisnikIzBaze;
             profilKorisnik = korisnik;
+            
             return navigacija.profilna();
         } catch (Exception ex) {
             FacesContext context = FacesContext.getCurrentInstance();
@@ -195,18 +189,9 @@ public class MBKorisnik implements Serializable {
     }
 
     public String pokreniProfilnuStranu() {
-        profilKorisnik = korisnik;
+        profilKorisnik  = korisnik;
         return navigacija.profilna();
     }
-
-    public List<Korisnik> getListaKorisnika() {
-        return listaKorisnika;
-    }
-
-    public void setListaKorisnika(List<Korisnik> listaKorisnika) {
-        this.listaKorisnika = listaKorisnika;
-    }
-
     public boolean isProfileSameAsUser() {
         return korisnik.equals(profilKorisnik);
     }
@@ -220,6 +205,9 @@ public class MBKorisnik implements Serializable {
         return rel != null;
     }
 
+    public boolean isAdmin(){
+        return korisnik.getRole().equals(Korisnik.ADMIN);
+    }
     /* public String getParams() {
     System.out.println("--- POZVANA METODA GETPARAMS() ---");
     try {

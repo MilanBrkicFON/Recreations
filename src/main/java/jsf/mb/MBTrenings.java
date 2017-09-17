@@ -30,9 +30,13 @@ public class MBTrenings implements Serializable {
 
     private List<Trening> treninzi;
     private Trening selektovanTrening;
+    private Trening noviTrening;
+    
     
     @Inject
     private Kontroler kontroler;
+    @Inject
+    private MBKorisnik mbKorisnik;
 
     /**
      * Creates a new instance of MBTrenings
@@ -43,6 +47,8 @@ public class MBTrenings implements Serializable {
     @PostConstruct
     public void init() {
         treninzi = kontroler.vratiSveTreninge();
+        selektovanTrening = new Trening();
+        noviTrening = new Trening();
     }
 
     public List<Trening> getTreninzi() {
@@ -60,11 +66,20 @@ public class MBTrenings implements Serializable {
     public void setSelektovanTrening(Trening selektovanTrening) {
         this.selektovanTrening = selektovanTrening;
     }
+
+    public Trening getNoviTrening() {
+        return noviTrening;
+    }
+
+    public void setNoviTrening(Trening noviTrening) {
+        this.noviTrening = noviTrening;
+    }
+    
     
 
     public List<Trening> vratiTreninge(Osoba o) {
         List<Trening> pomTrening = new ArrayList<>();
-        System.out.println(o);
+        System.out.println(o.getName());
         if (o instanceof Clan) {
             System.out.println("clan");
             Clan clan = (Clan) o;
@@ -82,9 +97,13 @@ public class MBTrenings implements Serializable {
                 }
             }
         }
-        System.out.println("--- ZAVRSENA METODA VRATITRENINGE(CLAN) ----");
-        System.out.println("--- VRACENO "+pomTrening.size()+"----");
         
         return pomTrening;
+    }
+    
+    public String saveNew(){
+        
+        
+        return null;
     }
 }

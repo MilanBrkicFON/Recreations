@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
+import model.Trening;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
@@ -23,23 +24,24 @@ import org.primefaces.event.SelectEvent;
 @ViewScoped
 public class MBPrijavaNaTrening implements Serializable {
 
-    public void izaberiTrening(){
-        try{
-        Map<String,Object> opcije = new HashMap<>();
-        opcije.put("resizable", true);
-        opcije.put("dragable", true);
-        opcije.put("modal", true);
-        opcije.put("contentWidth", "100%");
-        opcije.put("width", "70%");
-        
-        //null - moze se poslati parametri na dijalog! Ako zatreba
-        RequestContext.getCurrentInstance().openDialog("prijavaNaTrening", opcije, null);
-        }catch(Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("greska: "+e.getMessage()));
-        } 
+    public void izaberiTrening() {
+        try {
+            Map<String, Object> options = new HashMap<>();
+            options.put("resizable", false);
+            options.put("draggable", false);
+            options.put("modal", true);
+
+            RequestContext.getCurrentInstance().openDialog("dijalogTreningPrijava", options, null);
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("greska: " + e.getMessage()));
+        }
     }
-    
-    public void naIzabranTrening(SelectEvent evt){
+
+    public void naIzabranTrening(SelectEvent evt) {
+        Trening trening = (Trening) evt.getObject();
         
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Prijavljen na trening: ", trening.toString());
+        
+        FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 }

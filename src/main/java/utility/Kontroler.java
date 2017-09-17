@@ -20,6 +20,7 @@ import javax.persistence.TypedQuery;
 import model.Osoba;
 import model.Relationship;
 import model.Sport;
+import model.Trener;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -142,12 +143,12 @@ public class Kontroler implements Serializable {
 
     }
 
-    public List vratiSveTrenere() {
+    public List<Trener> vratiSveTrenere() {
         session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
-        TypedQuery<Clan> query;
+        TypedQuery<Trener> query;
         query = session.createQuery("from Trener");
-        List lista = query.getResultList();
+        List<Trener> lista = query.getResultList();
         session.close();
         return lista;
     }
@@ -184,6 +185,10 @@ public class Kontroler implements Serializable {
         TypedQuery query;
         query = session.createQuery("from Trening");
         List<Trening> lista = query.getResultList();
+        for (Trening trening : lista) {
+            Hibernate.initialize(trening.getTreneri());
+            Hibernate.initialize(trening.getClanovi());
+        }
         session.close();
         return lista;
     }
@@ -191,7 +196,6 @@ public class Kontroler implements Serializable {
     public static void main(String[] args) {
         Kontroler kontroler = new Kontroler();
 
-        kontroler.sacuvajKorisnika(new Korisnik("nemanja@gmail.com", "nemanja", new Osoba(1006)));
     }
 
     public List<Korisnik> vratiSveKorisnike() {
@@ -409,7 +413,7 @@ public class Kontroler implements Serializable {
         }
     }
 
-    public void izmeni(Trening trening) {
+    public void izmeni(Trening trening) throws Exception{
         session = HibernateUtil.getSessionFactory().getCurrentSession();
         
         Transaction tx = null;
@@ -423,6 +427,7 @@ public class Kontroler implements Serializable {
             if (tx != null) {
                 tx.rollback();
             }
+            throw e;
         } finally{
             session.close();
         }

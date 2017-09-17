@@ -5,18 +5,14 @@
  */
 package jsf.mb;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
-import model.Clan;
 import model.Korisnik;
 import model.Osoba;
 import org.primefaces.event.SelectEvent;
@@ -27,15 +23,14 @@ import utility.Kontroler;
  * @author Milan
  */
 @Named(value = "autoCompleteView")
-@ViewScoped
+@RequestScoped
 public class AutoCompleteView implements Serializable {
 
     private Osoba osoba;
     @Inject
     private Kontroler kontroler;
-
     @Inject
-    private MBKorisnik mb;
+    private MBKorisnik mbKorisnik;
     @Inject
     private Navigacija nav;
 
@@ -45,22 +40,24 @@ public class AutoCompleteView implements Serializable {
     public AutoCompleteView() {
     }
 
-    public List<Osoba> getList(String pretraga) {
-
-        List<Osoba> filtriraneOsobe = kontroler.vratiSveOsobe(pretraga);
-        return filtriraneOsobe;
+    public List<Osoba> getSelected(String search) {
+        if (search.isEmpty()) {
+            return null;
+        }
+        return kontroler.vratiSveOsobe(search);
     }
 
-    public void onItemSelect(SelectEvent event) throws IOException {
-        System.out.println("---- POZVALA SE METODA ZA AUTOCOMPLETE ----");
-        System.out.println("Osoba iz klase: " + osoba);
-        
-        Korisnik kor = kontroler.getSelectedUser(osoba);
-        mb.setProfilKorisnik(kor);
-        System.out.println("--- PROFILNI KORISNIK SETOVAN NA: " + kor);
-        FacesContext.getCurrentInstance().getApplication()
-                .getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), "", nav.profilna());
+    public void onItemSelect(SelectEvent evt) {
+        System.out.println("OSOBA: " + osoba);
+        mbKorisnik.setProfilKorisnik(kontroler.getSelectedUser(osoba));
 
+        FacesContext.getCurrentInstance()
+                .getApplication().getNavigationHandler()
+                .handleNavigation(FacesContext.getCurrentInstance(), "", "profilnaStrana.xhtml");
+
+        FacesContext.getCurrentInstance()
+                .addMessage("msgs", new FacesMessage(FacesMessage.SEVERITY_INFO, "Selectovan: ",
+                        osoba.getName()));
     }
 
     public Osoba getOsoba() {
@@ -70,5 +67,6 @@ public class AutoCompleteView implements Serializable {
     public void setOsoba(Osoba osoba) {
         this.osoba = osoba;
     }
-
+    
+    
 }

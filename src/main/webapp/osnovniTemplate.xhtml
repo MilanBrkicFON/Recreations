@@ -55,7 +55,8 @@
 
         <p:layout fullPage="true" >
             <p:layoutUnit position="north" >
-                <h:form id="menu-bar" >
+
+                <h:form id="menu-bar-form">
                     <p:menubar id="menubar">
                         <p:menuitem  value="#{msg.menubar_home}" action="#{navigacija.pocetna()}"  ajax="false" icon="fa fa-home fa-lg" />
                         <p:submenu label="#{msg.menubar_user}" >
@@ -65,6 +66,7 @@
 
                         <p:submenu label="#{msg.menubar_recreation}" >
                             <p:menuitem value="#{msg.menubar_recreation_workout}" url="#{navigacija.mojiTreninzi()}" ajax="false" /> 
+                            <p:menuitem rendered="#{mBKorisnik.admin}" url="#{navigacija.dodajTrening()}"
                         </p:submenu>
                         <p:submenu label="#{localization.current}" >
                             <p:menuitem value="ENG" ajax="false" action="#{localization.change(1)}" style="width: 50px;"/>
@@ -101,27 +103,23 @@
                         </p:submenu>
 
                         <f:facet name="options">
+                            <p:autoComplete id="event" 
+                                            value="#{autoCompleteView.osoba}"
+                                            completeMethod="#{autoCompleteView.getSelected}"
+                                            converter="#{osobaConverters}"
+                                            var="osoba"
+                                            itemLabel="#{osoba.name}"
+                                            itemValue="#{osoba}"
+                                            emptyMessage="Nema ponudjenih rezultata"
+                                            size="35"
+                                            placeholder="Pretraga clanova..."
+                                            maxResults="15"
+                                            queryDelay="1000"
+                                            >
+                                <p:ajax event="itemSelect" listener="#{autoCompleteView.onItemSelect}" update=":menu-bar-form:msgs" />
+                            </p:autoComplete>
 
-                            <h:form>
-                                <p:autoComplete 
-                                    id="event" 
-                                    minQueryLength="2" 
-                                    value="#{autoCompleteView.osoba}"  
-                                    completeMethod="#{autoCompleteView.getList}"
-                                    var="o"
-                                    itemLabel="#{o.getName()}"
-                                    itemValue="#{o}"
-                                    queryDelay="1000"
-                                    size="60"
-                                    converter="#{osobaConverters}">
-
-                                    <p:ajax event="itemSelect" listener="#{autoCompleteView.onItemSelect}" async="true" update="@all" />
-                                </p:autoComplete>
-                                <p:commandButton value="#{msg.msg_logout_button}" action="#{mBKorisnik.logout()}" ajax="false" icon="fa fa-sign-out fa-lg"/> 
-
-                                <p:growl id="msgs" showDetail="true" />
-                            </h:form>
-
+                            <p:commandButton value="#{msg.msg_logout_button}" action="#{mBKorisnik.logout()}" ajax="false" icon="fa fa-sign-out fa-lg"/> 
 
                         </f:facet>
                     </p:menubar>

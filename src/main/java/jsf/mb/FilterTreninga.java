@@ -69,7 +69,6 @@ public class FilterTreninga implements Serializable {
     }
 
     public List<Trener> getTreneriNaTreningu() {
-        System.out.println("treneri na treningu"+ treneriNaTreningu.size());
         return treneriNaTreningu;
     }
 
@@ -78,18 +77,46 @@ public class FilterTreninga implements Serializable {
     }
 
     public void vratiSelektovanog(Trening trening) {
-        //logika za dodavanje clana na trening
-        System.out.println("--- POZVALA SE METODA VRATISELEKTOVANOG() ---");
         trening.getClanovi().add((Clan) mbKorisnik.getKorisnik().getOsoba());
-        try {
+        try{
             kontroler.izmeni(trening);
-            FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Uspesno ste se prijavili na trening!", trening.toString()));
-        } catch (Exception e) {
-            FacesContext.getCurrentInstance().
-                    addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Doslo je do greske!", trening.toString()));
+            FacesContext.getCurrentInstance()
+                    .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO
+                            , "Uspesno ste prijavljeni na trening!"
+                            , trening.getNazivTreninga()));
+        }catch(Exception e){
+            FacesContext.getCurrentInstance()
+                    .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
+                            , "Niste se prijavili na trening!"
+                            , trening.getNazivTreninga()));
         }
         //RequestContext.getCurrentInstance().closeDialog(trening);
     }
 
+        public void obrisiSelektovanog(Trening trening) {
+        trening.getClanovi().remove((Clan) mbKorisnik.getKorisnik().getOsoba());
+        try{
+            kontroler.izmeni(trening);
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO
+                            , "Uspesno ste odjavljeni sa treninga!"
+                            , trening.getNazivTreninga());
+            RequestContext.getCurrentInstance().showMessageInDialog(msg);
+            FacesContext.getCurrentInstance()
+                    .addMessage(null, msg);
+        }catch(Exception e){
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO
+                            , "Niste se odjavili sa treninga!"
+                            , trening.getNazivTreninga());
+            RequestContext.getCurrentInstance().showMessageInDialog(msg);
+            FacesContext.getCurrentInstance()
+                    .addMessage(null, msg);
+        }
+        //RequestContext.getCurrentInstance().closeDialog(trening);
+    }
+    public boolean jeNaTreningu(Trening trening){
+        return trening.getClanovi().contains((Clan)mbKorisnik.getKorisnik().getOsoba());
+    }
+    public void proba(){
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("PROBA!!!!!!!!!!!!!!!!!"));
+    }
 }

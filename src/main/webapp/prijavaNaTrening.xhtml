@@ -51,22 +51,21 @@
                 <p:column headerText="#{msg.training_end}">
                     <h:outputText value="#{trening.vremeDo}" />
                 </p:column>
-  <!--  
                 <p:column headerText="Trener(i)">
   
-                 <p:commandButton id="btn-detaljiTrenera" update=":forma1:detaljiTrenera" 
+                    <p:commandButton id="btn-detaljiTrenera" update=":forma1:detaljiTrenera" 
                                      oncomplete="PF('trenerPanel').show()" icon="fa fa-male" title="Treneri">
                         <f:setPropertyActionListener value="{trening.treneri}" target="{filterTreninga.treneriNaTreningu}" />
                     </p:commandButton>
                 </p:column>
-              -->  
                 <p:column style="width:auto;text-align: center">
                       <p:commandButton icon="fa fa-plus" 
-                                       process="@this"
+                                       process="@form" update=":forma1:msg"
                                        actionListener="#{filterTreninga.vratiSelektovanog(trening)}" />
                 </p:column>
-
+                
             </p:dataTable>
+            <p:commandButton value="Proba" action="#{filterTreninga.proba}" />
             <p:overlayPanel id="panel"
                             widgetVar="trenerPanel" 
                             showEffect="fade" 

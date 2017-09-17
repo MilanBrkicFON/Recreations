@@ -27,8 +27,6 @@ import javax.persistence.Transient;
 )
 @DiscriminatorValue("C")
 public class Clan extends Osoba implements Serializable {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int clanID;
     private String imeRoditelja;
     private int godinaUpisa;
     
@@ -57,24 +55,10 @@ public class Clan extends Osoba implements Serializable {
         this.promenjen = promenjen;
     }
 
-    public Clan(int clanID) {
-        this.clanID = clanID;
-    }
-
-   
     @Override
     public String toString() {
         return super.toString();
     }
-
-    public int getClanID() {
-        return clanID;
-    }
-
-    public void setClanID(int clanID) {
-        this.clanID = clanID;
-    }
-
 
     public String getImeRoditelja() {
         return imeRoditelja;
@@ -94,34 +78,26 @@ public class Clan extends Osoba implements Serializable {
     }
 
 
-    public String getAttributes(){
-        return clanID + " "+ godinaUpisa + " ";
-    }
-
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 61 * hash + this.clanID;
+        int hash = 5;
+        hash = 97 * hash + this.idOsoba;
         return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
+        
         if (this == obj) {
             return true;
         }
         if (obj == null) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Clan other = (Clan) obj;
-        if (this.idOsoba != other.idOsoba) {
-            return false;
-        }
-        return true;
+        return super.equals(obj);
     }
+
+ 
     
     
     
