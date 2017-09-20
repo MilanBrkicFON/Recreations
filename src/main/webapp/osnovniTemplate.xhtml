@@ -42,10 +42,9 @@
             function proveri() {
                 if (#{friendsRequest.friends.size() > 0}) {
                     console.log('vece!');
-                    document.getElementById('menu-bar:sub-friends').style.backgroundColor = "indianred";
+                    document.getElementById('sub-friends').style.backgroundColor = "indianred";
                 } else {
                     console.log('manje!');
-                    document.getElementById('menu-bar:sub-friends').style.backgroundColor = "none";
                 }
             }
         </script>
@@ -53,20 +52,20 @@
 
     <h:body>
 
-        <p:layout fullPage="true" >
+        <p:layout fullPage="true">
             <p:layoutUnit position="north" >
 
                 <h:form id="menu-bar-form">
                     <p:menubar id="menubar">
                         <p:menuitem  value="#{msg.menubar_home}" action="#{navigacija.pocetna()}"  ajax="false" icon="fa fa-home fa-lg" />
                         <p:submenu label="#{msg.menubar_user}" >
-                            <p:menuitem  value="#{msg.menubar_user_profile}" url="#{mBKorisnik.pokreniProfilnuStranu()}" ajax="false" /> 
-                            <p:menuitem value="#{msg.menubar_user_edit}" url="#{navigacija.editKorisnika()}" ajax="false" /> 
+                            <p:menuitem  value="#{msg.menubar_user_profile}" action="#{mBKorisnik.pokreniProfilnuStranu()}" ajax="false" /> 
+                            <p:menuitem value="#{msg.menubar_user_edit}" action="#{navigacija.editKorisnika()}" ajax="false" /> 
                         </p:submenu>
 
                         <p:submenu label="#{msg.menubar_recreation}" >
-                            <p:menuitem value="#{msg.menubar_recreation_workout}" url="#{navigacija.mojiTreninzi()}" ajax="false" /> 
-                            <p:menuitem rendered="#{mBKorisnik.admin}" url="#{navigacija.dodajTrening()}"
+                            <p:menuitem value="#{msg.menubar_recreation_workout}" action="#{navigacija.mojiTreninzi()}" ajax="false" /> 
+                            <p:menuitem value="Dodaj trening" action="#{navigacija.dodajTrening()}" ajax="false" rendered="#{mBKorisnik.admin}"/>
                         </p:submenu>
                         <p:submenu label="#{localization.current}" >
                             <p:menuitem value="ENG" ajax="false" action="#{localization.change(1)}" style="width: 50px;"/>
@@ -116,7 +115,7 @@
                                             maxResults="15"
                                             queryDelay="1000"
                                             >
-                                <p:ajax event="itemSelect" listener="#{autoCompleteView.onItemSelect}" update=":menu-bar-form:msgs" />
+                                <p:ajax event="itemSelect" listener="#{autoCompleteView.onItemSelect}" update="@all" />
                             </p:autoComplete>
 
                             <p:commandButton value="#{msg.msg_logout_button}" action="#{mBKorisnik.logout()}" ajax="false" icon="fa fa-sign-out fa-lg"/> 
@@ -126,10 +125,6 @@
                     <p:growl id="msgs" showDetail="true" />
                     <p:sticky target="menubar" />
                 </h:form>
-            </p:layoutUnit>
-
-            <p:layoutUnit position="south" size="100">
-                <ui:insert name="bottom"></ui:insert>
             </p:layoutUnit>
             <p:layoutUnit position="east" size="200">
                 <ui:insert name="right"></ui:insert>

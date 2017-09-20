@@ -51,7 +51,7 @@
                     document.getElementById("hidden-button").click();
                 } else {
                     // The person is not logged into your app or we are unable to tell.
-                   
+
                 }
 
             }
@@ -159,14 +159,14 @@
                                 </p:password>
 
                                 <p:outputLabel for="pwd2" title="Ponovo ukucati" value="#{msg.msg_password} " style="width: 300px"/>
-                              <p:password id="pwd2" required="true">
+                                <p:password id="pwd2" required="true">
                                     <p:watermark for="pwd2" value="#{msg.retype}" id="watermark2" />
                                 </p:password>
 
                                 <p:outputLabel for="mesta" value="#{msg.msg_city}" style="width: 300px"/>
                                 <p:selectOneMenu id="mesta" value="#{mBKorisnik.korisnikZaRegistraciju.osoba.mesto}" converter="#{mestoConv}" style="width:125px">
-                                    <f:selectItems  var="mesto" value="#{MBSviClanovi.mesta}" itemValue="#{mesto}" itemLabel="#{mesto}" >
-                                        </f:selectItems>
+                                    <f:selectItems  var="mesto" value="#{mbMesta.mesta}" itemValue="#{mesto}" itemLabel="#{mesto}" >
+                                    </f:selectItems>
 
                                 </p:selectOneMenu>
 

@@ -8,16 +8,24 @@ package jsf.mb;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import model.Clan;
 import model.Osoba;
 import model.Trener;
 import model.Trening;
+import org.primefaces.event.SelectEvent;
 import utility.Kontroler;
 
 /**
@@ -31,12 +39,16 @@ public class MBTrenings implements Serializable {
     private List<Trening> treninzi;
     private Trening selektovanTrening;
     private Trening noviTrening;
-    
-    
+    private Clan selektovanClan;
+    private Date vremeOd;
+    private Date vremeDo;
+
     @Inject
     private Kontroler kontroler;
     @Inject
     private MBKorisnik mbKorisnik;
+    @Inject
+    Navigacija nav;
 
     /**
      * Creates a new instance of MBTrenings
@@ -47,8 +59,24 @@ public class MBTrenings implements Serializable {
     @PostConstruct
     public void init() {
         treninzi = kontroler.vratiSveTreninge();
-        selektovanTrening = new Trening();
+//        selektovanTrening = new Trening();
         noviTrening = new Trening();
+    }
+
+    public Date getVremeOd() {
+        return vremeOd;
+    }
+
+    public void setVremeOd(Date vremeOd) {
+        this.vremeOd = vremeOd;
+    }
+
+    public Date getVremeDo() {
+        return vremeDo;
+    }
+
+    public void setVremeDo(Date vremeDo) {
+        this.vremeDo = vremeDo;
     }
 
     public List<Trening> getTreninzi() {
@@ -74,8 +102,14 @@ public class MBTrenings implements Serializable {
     public void setNoviTrening(Trening noviTrening) {
         this.noviTrening = noviTrening;
     }
-    
-    
+
+    public Clan getSelektovanClan() {
+        return selektovanClan;
+    }
+
+    public void setSelektovanClan(Clan selektovanClan) {
+        this.selektovanClan = selektovanClan;
+    }
 
     public List<Trening> vratiTreninge(Osoba o) {
         List<Trening> pomTrening = new ArrayList<>();
@@ -88,7 +122,7 @@ public class MBTrenings implements Serializable {
                     pomTrening.add(trening);
                 }
             }
-        }else if(o instanceof Trener){
+        } else if (o instanceof Trener) {
             System.out.println("trener");
             Trener trener = (Trener) o;
             for (Trening trening : treninzi) {
@@ -97,13 +131,41 @@ public class MBTrenings implements Serializable {
                 }
             }
         }
-        
+
         return pomTrening;
     }
-    
-    public String saveNew(){
-        
-        
+
+    public void onRowSelect(SelectEvent evt) {
+        if (evt == null) {
+            System.out.println("NULL NULL NULL");
+            return;
+        }
+        Object o = evt.getObject();
+        if (o instanceof Trener) {
+            Trener t = (Trener) o;
+            noviTrening.getTreneri().add(t);
+            FacesMessage msg = new FacesMessage("Unet trener", t.getName());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        } else if (o instanceof Clan) {
+            Clan cl = (Clan) o;
+            noviTrening.getClanovi().add(cl);
+            FacesMessage msg = new FacesMessage("Unet clan", cl.getName());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+
+    }
+
+    public String saveNew() {
+        try {
+            noviTrening.setVremeOd(LocalDateTime.ofInstant(vremeOd.toInstant(), ZoneId.systemDefault()).toLocalTime());
+            System.out.println("VREME: " + noviTrening.getVremeOd().toString());
+            noviTrening.setVremeDo(LocalDateTime.ofInstant(vremeDo.toInstant(), ZoneId.systemDefault()).toLocalTime());
+            kontroler.sacuvaj(noviTrening);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sacuvan!", noviTrening.toString()));
+            return nav.pocetna();
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Greska!", e.getMessage()));
+        }
         return null;
     }
 }

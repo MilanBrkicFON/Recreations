@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import model.Clan;
@@ -19,31 +20,22 @@ import utility.Kontroler;
  *
  * @author Milan
  */
-@Named(value = "MBSviClanovi")
-@SessionScoped
-public class MBSviClanovi implements Serializable{
+@Named(value = "mbMesta")
+@ViewScoped
+public class MBMesta implements Serializable{
 
-    private List<Clan> clanovi;
     private List<Mesto> mesta;
     
     @Inject
     Kontroler kontroler;
 
-    public MBSviClanovi() {
+    public MBMesta() {
     }
     
     
     @PostConstruct
     public void init(){
-        clanovi = kontroler.vratiSveClanove();
         mesta = kontroler.vratiSvaMesta();
-    }
-    public List<Clan> getClanovi() {
-        return clanovi;
-    }
-
-    public void setClanovi(List<Clan> clanovi) {
-        this.clanovi = clanovi;
     }
 
     public List<Mesto> getMesta() {
@@ -53,7 +45,5 @@ public class MBSviClanovi implements Serializable{
     public void setMesta(List<Mesto> mesta) {
         this.mesta = mesta;
     }
-
-    
     
 }

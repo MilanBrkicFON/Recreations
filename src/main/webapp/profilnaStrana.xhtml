@@ -7,6 +7,9 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
         <title>PROFILNA STRANA</title>
+        <script type="text/javascript">
+            $('addFriend').text("Poslat zahtev");
+        </script>
     </h:head>
     <h:body>
 
@@ -16,11 +19,10 @@
                 <p:outputLabel value="#{mBKorisnik.profilKorisnik.osoba.name}" style="font-size: 40px" />
                 <h:form rendered="#{not mBKorisnik.areFriends()}">
                     <p:panelGrid columns="1" layout="grid" style="border: none;" >
-                        <p:outputLabel value="#{msg.add-as-friend-msg}" />
-                        <p:commandButton value="#{msg.add-as-friend}" action="#{mBKorisnik.addFriend}" /> 
+                        <h:outputText value="Niste prijatelji!" />
+                        <p:commandButton id="addFriend" value="Dodaj za prijatelja!" action="#{mBKorisnik.addFriend}" onclick="add()"/> 
                     </p:panelGrid>
                 </h:form>
-
 
             </ui:define>
 
@@ -36,7 +38,8 @@
                         <p:outputLabel id="age" value="#{mBKorisnik.getAge()}" rendered="#{not empty mBKorisnik.korisnik.osoba.datumRodjenja}"/>
 
                         <p:outputLabel value="Rating: " />
-                        <p:outputLabel id="rating" value="#{mBKorisnik.profilKorisnik.osoba.rating}" rendered="#{mBKorisnik.profileSameAsUser}"/>
+                        <p:outputLabel id="rating" value="#{mBKorisnik.profilKorisnik.osoba.rating}"  rendered="#{mBKorisnik.profileSameAsUser}">
+                        </p:outputLabel>
                         <p:rating stars="10" id="rating-friend" onRate="alert('You have rated friend!')" rendered="#{not mBKorisnik.areFriends()}" /> 
                         <p:outputLabel value="Stamina: " />
                         <p:outputLabel  value="#{mBKorisnik.profilKorisnik.osoba.stamina}" />

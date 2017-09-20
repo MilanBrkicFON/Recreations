@@ -8,7 +8,7 @@ package jsf.mb;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.Locale;
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 
 /**
@@ -16,18 +16,12 @@ import javax.faces.context.FacesContext;
  * @author Milan
  */
 @Named(value = "localization")
-@ApplicationScoped
+@SessionScoped
 public class Localization implements Serializable {
     public static final int ENG = 1;
     public static final int SERBIAN = 2;
     
-    private String current;
-    /**
-     * Creates a new instance of Localization
-     */
-    public Localization() {
-        current = "ENG";
-    }
+    private String current = "ENG";
     
     
     public void change(int language){

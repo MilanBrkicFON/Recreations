@@ -7,7 +7,6 @@ package jsf.mb;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 /**
  *
@@ -25,26 +24,26 @@ public class Navigacija {
     
     
     public String pocetna(){
-        return "pocetna.xhtml?faces-redirect=true";
+        return "/pocetna.xhtml?faces-redirect=true";
     }
     
     public String profilna(){
-        return "profilnaStrana.xhtml?faces-redirect=true";
+        return "/profilnaStrana.xhtml?faces-redirect=true";
     }
     
     public String editKorisnika(){
-        return "EditClan.xhtml?faces-redirect=true";
+        return "/EditClan.xhtml?faces-redirect=true";
     }
     
     public String mojiTreninzi(){
-        return "mojiTreninzi.xhtml?faces-redirect=true";
+        return "/mojiTreninzi.xhtml?faces-redirect=true";
     }
     
     public String index(){
-        return "index.xhtml?faces-redirect=true";
+        return "/index.xhtml?faces-redirect=true";
     }
     public String dodajTrening(){
-        return "admin/dodajTrening.xhtml?faces-redirect=true";
+        return "/admin/dodajTrening.xhtml?faces-redirect=true";
     }
     
 }

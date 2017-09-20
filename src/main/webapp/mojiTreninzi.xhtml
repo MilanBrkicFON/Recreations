@@ -16,8 +16,9 @@
             <ui:define name="content">
 
                 <p:panelGrid columns="3" style="border: none;" >
-                    <h:form>
-                        <p:commandButton  value="#{msg.add_new_workout}" actionListener="#{mBPrijavaNaTrening.izaberiTrening()}" 
+                    <h:form >
+                        <!--actionListener="# {mBPrijavaNaTrening.izaberiTrening()}" -->
+                        <p:commandButton  value="#{msg.add_new_workout}" onclick="PF('dialogPrijavaNaTrening').show()"
                                           icon="fa fa-external-link" >
                             <p:ajax event="dialogReturn" listener="#{mBPrijavaNaTrening.naIzabranTrening}" update="growl" />
                         </p:commandButton>
@@ -28,7 +29,65 @@
 
                 </p:panelGrid>
 
-                <h:form id="form">
+                <p:dialog widgetVar="dialogPrijavaNaTrening" closable="true">
+                    <h:form id="form-select">
+                        <p:growl id="growl" showDetail="true" />
+                        <p:dataTable id="tabela-trening" var="trening" value="#{filterTreninga.treninzi}" 
+                                     scrollRows="20" scrollable="true" liveScroll="true" scrollHeight="150">
+                            <p:column headerText="#{msg.training_name}">
+                                <h:outputText value="#{trening.nazivTreninga}" />
+                            </p:column>
+                            <p:column headerText="#{msg.training_date}">
+                                <h:outputText value="#{trening.datum}" converter="#{localDateConverter}"/>
+                            </p:column>
+                            <p:column headerText="#{msg.training_start}">
+                                <h:outputText value="#{trening.vremeOd}" />
+                            </p:column>
+                            <p:column headerText="#{msg.training_end}">
+                                <h:outputText value="#{trening.vremeDo}" />
+                            </p:column>
+                            <p:column headerText="#{msg.training_sport}">
+                                <h:outputText value="#{trening.sport}"/>
+                            </p:column>
+                            <p:column headerText="Trener(i)" >
+                                <p:commandButton update=":form-select:trenerDetail"
+                                                 oncomplete="PF('trenerOP').show('#{component.clientId}')" 
+                                                 icon="ui-icon-search" title="View">
+                                    <f:setPropertyActionListener value="#{trening.treneri}" target="#{filterTreninga.treneriNaTreningu}" />
+                                </p:commandButton>
+                            </p:column>
+                            <p:column headerText="Prijavi se" width="50px" style="text-align: center; align-content: center;">
+                                 <p:commandButton icon="fa fa-plus" actionListener="#{filterTreninga.vratiSelektovanog(trening)}"
+                                                  rendered="#{!filterTreninga.jeNaTreningu(trening)}" style="margin-left: 15px;"
+                                                  update=":form-select :form-tabela"/>
+                                 <p:commandButton icon="fa fa-minus" actionListener="#{filterTreninga.obrisiSelektovanog(trening)}"
+                                                  rendered="#{filterTreninga.jeNaTreningu(trening)}" update=":form-select :form-tabela"/>
+
+                            </p:column>
+
+                        </p:dataTable>
+
+                        <p:overlayPanel widgetVar="trenerOP" showEffect="fade" hideEffect="fade" dismissable="false" showCloseIcon="true">
+                            <p:outputPanel id="trenerDetail" layout="block">
+                                <ui:repeat   rendered="#{not empty filterTreninga.treneriNaTreningu}" 
+                                             var="trener" value="#{filterTreninga.treneriNaTreningu}"
+                                             >
+                                    <p:panelGrid columns="2">
+                                        <h:outputText value="#{msg.msg_name}: " />
+                                        <h:outputText value="#{trener.name}" />
+                                         
+                                        <h:outputText value="#{msg.msg_birthday}: " />
+                                        <h:outputText value="#{trener.datumRodjenja}" />
+                                         
+                                        <h:outputText value="Rejting: " />
+                                        <h:outputText value="#{trener.rating}" />
+                                    </p:panelGrid>
+                                </ui:repeat>
+                            </p:outputPanel>
+                        </p:overlayPanel>
+                    </h:form>
+                </p:dialog>
+                <h:form id="form-tabela">
 
                     <p:growl id="selektovan_trening" showDetail="true" />
 
@@ -53,7 +112,7 @@
                         </p:column>
 
                         <p:column style="width:32px;text-align: center">
-                            <p:commandButton update=":form:detalji_treninga" oncomplete="PF('dtDialog').show()" icon="ui-icon-search" title="#{msg.training_details}">
+                            <p:commandButton update=":form-tabela:detalji_treninga" oncomplete="PF('dtDialog').show()" icon="ui-icon-search" title="#{msg.training_details}">
                                 <f:setPropertyActionListener value="#{t}" target="#{mbTrening.selektovanTrening}" />
                             </p:commandButton>
                         </p:column>

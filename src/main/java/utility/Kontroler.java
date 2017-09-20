@@ -433,4 +433,23 @@ public class Kontroler implements Serializable {
         }
     }
 
+    public void sacuvaj(Trening noviTrening) throws Exception{
+        session = HibernateUtil.getSessionFactory().getCurrentSession();
+
+        Transaction tx = null;
+
+        try {
+            tx = session.beginTransaction();
+            session.save(noviTrening);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
+
 }

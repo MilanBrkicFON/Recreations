@@ -100,14 +100,12 @@ public class FilterTreninga implements Serializable {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO
                             , "Uspesno ste odjavljeni sa treninga!"
                             , trening.getNazivTreninga());
-            RequestContext.getCurrentInstance().showMessageInDialog(msg);
             FacesContext.getCurrentInstance()
                     .addMessage(null, msg);
         }catch(Exception e){
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO
                             , "Niste se odjavili sa treninga!"
                             , trening.getNazivTreninga());
-            RequestContext.getCurrentInstance().showMessageInDialog(msg);
             FacesContext.getCurrentInstance()
                     .addMessage(null, msg);
         }
@@ -115,8 +113,5 @@ public class FilterTreninga implements Serializable {
     }
     public boolean jeNaTreningu(Trening trening){
         return trening.getClanovi().contains((Clan)mbKorisnik.getKorisnik().getOsoba());
-    }
-    public void proba(){
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("PROBA!!!!!!!!!!!!!!!!!"));
     }
 }

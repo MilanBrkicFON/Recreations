@@ -8,11 +8,14 @@ package model;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -66,11 +69,14 @@ public class Trening implements Serializable {
     
     @Id
     @Column(name = "treningId")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int treningId;
     
     private String nazivTreninga;
     
     public Trening() {
+        clanovi = new ArrayList<>();
+        treneri = new ArrayList<>();
     }
 
     public Trening(int treningId) {

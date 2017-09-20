@@ -56,6 +56,7 @@ public class MBKorisnik implements Serializable {
     }
 
     public void setKorisnik(Korisnik korisnik) {
+        System.out.println("SET KORISNIK: "+ korisnik.getOsoba().getName());
         this.korisnik = korisnik;
     }
 
@@ -189,7 +190,8 @@ public class MBKorisnik implements Serializable {
     }
 
     public String pokreniProfilnuStranu() {
-        profilKorisnik  = korisnik;
+        System.out.println("Korisnik: "+korisnik.getOsoba().getName());
+        profilKorisnik.setOsoba(korisnik.getOsoba());
         return navigacija.profilna();
     }
     public boolean isProfileSameAsUser() {

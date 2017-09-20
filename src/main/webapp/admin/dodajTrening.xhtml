@@ -6,37 +6,135 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Facelet Title</title>
+        <title>Dodavanje treninga</title>
     </h:head>
     <h:body>
         <ui:composition template="/osnovniTemplate.xhtml">
             <ui:define name="content">
-                <h:form>
-                    <p:panelGrid id="kreirajTreningPanel" columns="3" layout="grid" style="border: none;">
+                <h2><h:outputText value="Dodjavanje treninga" /></h2>
+                <br/>
+                <br/>
+                <br/>
+                <h:form id="unos-treninga">
+                    <p:panelGrid id="kreirajTreningPanel" columns="2" styleClass="ui-noborder">
+                        <p:outputLabel value="Naziv treninga: "/>
+                        <p:inputText value="#{mbTrening.noviTrening.nazivTreninga}" placeholder="Naziv treninga..." />
+                        
+                        
                         <p:outputLabel value="Odaberi datum:" />
-                        <p:outputLabel value="Odaberi pocetak treninga: " />
-                        <p:outputLabel value="Odaberi kraj treninga: " />
-
                         <p:calendar value="#{mbTrening.noviTrening.datum}" 
                                     converter="#{localDateConverter}"
-                                    mode="inline" pages="2" locale="#{localization.locale}"
-                                    mindate="#{LocalDate.now}"
+                                    pages="2" 
+                                    pattern="dd-MM-yyyy" 
                                     required="true"
-                                    tabindex="1"/>
-                        <p:calendar timeOnly="true" value="#{mbTrening.noviTrening.vremeOd}" 
+                                    tabindex="1"
+                                    style="z-index: 90 !important"/>
+                        
+                        <p:outputLabel value="Odaberi pocetak treninga: " />
+                        <p:calendar timeOnly="true" value="#{mbTrening.vremeOd}" 
                                     pattern="HH:mm" stepMinute="10" tabindex="2" 
                                     required="true"/>
-                        <p:calendar timeOnly="true" value="#{mbTrening.noviTrening.vremeDo}" 
+                        
+                        <p:outputLabel value="Odaberi kraj treninga: " />
+                        <p:calendar timeOnly="true" value="#{mbTrening.vremeDo}" 
                                     pattern="HH:mm" stepMinute="10" tabindex="3"
                                     required="true"/>
 
                     </p:panelGrid>
-                    <p:selectOneButton value="#{mbTrening.noviTrening.sport}" converter="#{sportConverters}">
-                        <f:selectItems value="#{mbSport.sports}" var="s">
-                            <h:outputText value="#{s.naziv}" />
-                        </f:selectItems>
-                    </p:selectOneButton>
-                    <p:commandButton value="#{msg.edit_save_changes}" action="#{mbTrening.saveNew}" process="@form" update="@form" />
+                    <p:spacer />
+                    <p:separator />
+                    <br/>
+                    <p:panelGrid columns="2" styleClass="ui-noborder">
+                        <p:outputLabel value="Izaberi sport: " />
+                        <p:selectOneButton value="#{mbTrening.noviTrening.sport}" converter="#{sportConverters}" style="margin-left: 30px">
+                            <f:selectItems value="#{mbSport.sports}" var="s">
+                                <h:outputText value="#{s.naziv}" />
+                            </f:selectItems>
+                        </p:selectOneButton>
+                    </p:panelGrid>
+                    <br/>
+                    <p:separator/>
+                    <br/>
+                    <h3><p:outputLabel value="Dodaj trenere na trening: " /> </h3>
+                    <br/><br/>
+                    <!-- Tabel koja prikazuje sve trenere i dodaje ih u trening-->
+                    <p:panelGrid columns="2" layout="grid">
+                        <p:dataTable value="#{mbTreneri.treneri}" var="trener"
+                                     selectionMode="single"
+                                     scrollable="true" scrollHeight="300"
+                                     widgetVar="trenerTable"
+                                     selection="#{mbTrening.selektovanClan}"
+                                     rowKey="#{trener.idOsoba}"
+                                     
+                                     >
+                            <p:ajax event="rowSelect" listener="#{mbTrening.onRowSelect}" update=":unos-treninga:listaTrenera :unos-treninga:growl" />
+                            <p:column headerText="#{msg.msg_name}" filterBy="#{trener.name}" sortBy="#{trener.ime}" filterMatchMode="startsWith">
+                                <h:outputText value="#{trener.name}"/>
+                            </p:column>
+                            <p:column headerText="Pol" sortBy="#{trener.pol}" style="text-align: center">
+                                <h:outputText value="#{trener.pol}"/>
+                            </p:column>
+
+                        </p:dataTable>
+                        <p:dataList value="#{mbTrening.noviTrening.treneri}" emptyMessage="Niste ubacili ni jednog trenera"
+                                    var="dodatTrener" id="listaTrenera" type="ordered" >
+                            <f:facet name="header">
+                                Uneti treneri
+                            </f:facet>
+                            #{dodatTrener.name}
+                        </p:dataList>
+                    </p:panelGrid>
+                    <br/>
+                    <p:separator/>
+                    <br/>
+                    <h3><p:outputLabel value="Dodaj korisnike na trening: " /> </h3>
+                    <br/><br/>
+                     <!-- Tabel koja prikazuje sve osobe i dodaje ih u trening-->
+                    <p:panelGrid columns="2" layout="grid">
+                       
+                        <p:dataTable value="#{mbClanovi.clanovi}" var="clan"
+                                     selectionMode="single"
+                                     scrollable="true" scrollHeight="300"
+                                     widgetVar="korTable"
+                                     selection="#{mbTrening.selektovanClan}"
+                                     rowKey="#{clan.idOsoba}"
+                                     
+                                     >
+                            <f:facet name="header">
+                                    <h:outputText value="Pretraga:" />
+                                    <p:inputText id="globalFilter" onkeyup="PF('korTable').filter()" style="width:150px" placeholder="Uneti rec..."/>
+                            </f:facet>
+                            <p:ajax event="rowSelect" listener="#{mbTrening.onRowSelect}" update=":unos-treninga:listaClanova :unos-treninga:growl" />
+                            <p:column headerText="#{msg.msg_name}" filterBy="#{clan.name}" sortBy="#{clan.ime}" filterMatchMode="startsWith">
+                                <h:outputText value="#{clan.name}"/>
+                            </p:column>
+                            <p:column headerText="Pol" sortBy="#{clan.pol}" style="text-align: center">
+                                <h:outputText value="#{clan.pol}"/>
+                            </p:column>
+                            <p:column headerText="#{msg.msg_height}" filterBy="#{clan.visina}"
+                                      style="text-align: center"
+                                      filterMatchMode="startsWith">
+                                <h:outputText value="#{clan.visina}" />
+                            </p:column>
+
+                        </p:dataTable>
+                        <p:dataList value="#{mbTrening.noviTrening.clanovi}" emptyMessage="Niste ubacili ni jednog clana"
+                                    var="dodatClan" id="listaClanova" type="ordered" >
+                            <f:facet name="header">
+                                Uneti clanovi
+                            </f:facet>
+                            #{dodatClan.name}
+                        </p:dataList>
+                    </p:panelGrid>
+                    <br/>
+                    <p:separator/>
+                    <br/>
+
+                    <p:commandButton value="#{msg.edit_save_changes}" 
+                                     action="#{mbTrening.saveNew}" 
+                                     process="@form" update="growl" 
+                                     style="float: right;"/>
+
                     <p:growl id="growl" showDetail="true" />
                 </h:form>
             </ui:define>

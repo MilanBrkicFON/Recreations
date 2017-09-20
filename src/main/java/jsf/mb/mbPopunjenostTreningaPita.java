@@ -34,15 +34,18 @@ public class mbPopunjenostTreningaPita implements Serializable {
 
     @PostConstruct
     public void init() {
-        model = new PieChartModel();
+        if (trening.getSelektovanTrening() != null) {
 
-        System.out.println("--- TRENING: " + trening.getSelektovanTrening());
- 
-        model.set("Slobodno", trening.getSelektovanTrening().getSport().getMaxBrClanova() - trening.getSelektovanTrening().getClanovi().size());
-        model.set("Zauzeto", trening.getSelektovanTrening().getClanovi().size());
-       
-        model.setTitle("Informacija o treningu");
-        model.setShowDataLabels(true);
+            model = new PieChartModel();
+
+            System.out.println("--- TRENING: " + trening.getSelektovanTrening());
+
+            model.set("Slobodno", trening.getSelektovanTrening().getSport().getMaxBrClanova() - trening.getSelektovanTrening().getClanovi().size());
+            model.set("Zauzeto", trening.getSelektovanTrening().getClanovi().size());
+
+            model.setTitle("Informacija o treningu");
+            model.setShowDataLabels(true);
+        }
     }
 
     public PieChartModel getModel() {
