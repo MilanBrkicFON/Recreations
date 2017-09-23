@@ -11,49 +11,48 @@
             $('addFriend').text("Poslat zahtev");
         </script>
     </h:head>
-    <h:body>
 
-        <ui:composition template="/osnovniTemplate.xhtml">
+    <ui:composition template="/osnovniTemplate.xhtml">
 
-            <ui:define name="content">
-                <p:outputLabel value="#{mBKorisnik.profilKorisnik.osoba.name}" style="font-size: 40px" />
-                <h:form rendered="#{not mBKorisnik.areFriends()}">
-                    <p:panelGrid columns="1" layout="grid" style="border: none;" >
-                        <h:outputText value="Niste prijatelji!" />
-                        <p:commandButton id="addFriend" value="Dodaj za prijatelja!" action="#{mBKorisnik.addFriend}" onclick="add()"/> 
-                    </p:panelGrid>
-                </h:form>
+        <ui:define name="content">
+            <p:outputLabel value="#{mBKorisnik.profilKorisnik.osoba.name}" style="font-size: 40px" />
+            <h:form rendered="#{not mBKorisnik.areFriends()}">
+                <p:panelGrid columns="1" layout="grid" style="border: none;" >
+                    <h:outputText value="Niste prijatelji!" />
+                    <p:commandButton id="addFriend" value="Dodaj za prijatelja!" action="#{mBKorisnik.addFriend}" onclick="add()"/> 
+                </p:panelGrid>
+            </h:form>
 
-            </ui:define>
+        </ui:define>
 
-            <ui:define name="left"  >
-                <h:form>
-                    <p:graphicImage name="user.png" library="images" height="200px" width="165px"  />
+        <ui:define name="left"  >
+            <h:form>
+                <p:graphicImage name="user.png" library="images" height="200px" width="165px"  />
 
-                    <p:panelGrid columns="2" layout="grid">
-                        <p:outputLabel value="#{msg.msg_name}: " />
-                        <p:outputLabel id="name" value="#{mBKorisnik.profilKorisnik.osoba.name}" />
+                <p:panelGrid columns="2" layout="grid">
+                    <p:outputLabel value="#{msg.msg_name}: " />
+                    <p:outputLabel id="name" value="#{mBKorisnik.profilKorisnik.osoba.name}" />
 
-                        <p:outputLabel value="Age: " rendered="#{not empty mBKorisnik.korisnik.osoba.datumRodjenja}" />
-                        <p:outputLabel id="age" value="#{mBKorisnik.getAge()}" rendered="#{not empty mBKorisnik.korisnik.osoba.datumRodjenja}"/>
+                    <p:outputLabel value="Age: " rendered="#{not empty mBKorisnik.korisnik.osoba.datumRodjenja}" />
+                    <p:outputLabel id="age" value="#{mBKorisnik.getAge()}" rendered="#{not empty mBKorisnik.korisnik.osoba.datumRodjenja}"/>
 
-                        <p:outputLabel value="Rating: " />
-                        <p:outputLabel id="rating" value="#{mBKorisnik.profilKorisnik.osoba.rating}"  rendered="#{mBKorisnik.profileSameAsUser}">
-                        </p:outputLabel>
-                        <p:rating stars="10" id="rating-friend" onRate="alert('You have rated friend!')" rendered="#{not mBKorisnik.areFriends()}" /> 
-                        <p:outputLabel value="Stamina: " />
-                        <p:outputLabel  value="#{mBKorisnik.profilKorisnik.osoba.stamina}" />
+                    <p:outputLabel value="Rating: " />
+                    <p:outputLabel id="rating" value="#{mBKorisnik.profilKorisnik.osoba.rating}"  rendered="#{mBKorisnik.profileSameAsUser}">
+                    </p:outputLabel>
+                    <p:rating stars="10" id="rating-friend" onRate="alert('You have rated friend!')" rendered="#{not mBKorisnik.areFriends()}" /> 
+                    <p:outputLabel value="Stamina: " />
+                    <p:outputLabel  value="#{mBKorisnik.profilKorisnik.osoba.stamina}" />
 
-                    </p:panelGrid>
-                </h:form>
-            </ui:define>
-            <ui:define name="right">
-                <h:form>
-                    <p:link value="#{msg.edit_profile_button}"   outcome="#{navigacija.editKorisnika()}"  />
-                </h:form>
-            </ui:define>
+                </p:panelGrid>
+            </h:form>
+        </ui:define>
+        <ui:define name="right">
+            <h:form>
+                <p:link value="#{msg.edit_profile_button}"   outcome="#{navigacija.editKorisnika()}"  />
+            </h:form>
+        </ui:define>
 
-        </ui:composition>
-    </h:body>
+    </ui:composition>
+
 </html>
 

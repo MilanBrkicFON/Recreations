@@ -27,7 +27,7 @@ import utility.Kontroler;
 @SessionScoped
 public class FriendsRequest implements Serializable{
 
-    private List<Relationship> friends = new ArrayList<>();
+    private List<Relationship> friends;
     
     @Inject
     private Kontroler kontroler;
@@ -45,6 +45,7 @@ public class FriendsRequest implements Serializable{
     }
     
     public List<Relationship> get(){
+        System.out.println("--- POZVANA METODA GETREL() ----");
         friends = kontroler.getAllFriendsRequest(korisnik.getKorisnik().getOsoba());
         return friends;
     }
@@ -62,12 +63,14 @@ public class FriendsRequest implements Serializable{
         System.out.println(rel);
         rel.setStatus(Relationship.Status.FRIENDS);
         kontroler.sacuvaj(rel);
+        friends.remove(rel);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "You accepted request!", ""));
     }
     
     public void reject(Relationship rel){
         rel.setStatus(Relationship.Status.NOT_FRIENDS);
         kontroler.sacuvaj(rel);
+        friends.remove(rel);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "You rejected request!", ""));
     }
 }

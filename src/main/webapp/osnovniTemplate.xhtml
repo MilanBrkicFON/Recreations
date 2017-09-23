@@ -50,12 +50,13 @@
         </script>
     </h:head>
 
-    <h:body>
-
+    <h:body onload="rc()">
+        
         <p:layout fullPage="true">
-            <p:layoutUnit position="north" >
+            <p:layoutUnit position="north">
 
-                <h:form id="menu-bar-form">
+                <h:form id="menu-bar-form" >
+                    <p:remoteCommand name="rc" actionListener="#{friendsRequest.get()}" update=":menu-bar-form:ds-friendsRequest" />
                     <p:menubar id="menubar">
                         <p:menuitem  value="#{msg.menubar_home}" action="#{navigacija.pocetna()}"  ajax="false" icon="fa fa-home fa-lg" />
                         <p:submenu label="#{msg.menubar_user}" >
@@ -71,12 +72,12 @@
                             <p:menuitem value="ENG" ajax="false" action="#{localization.change(1)}" style="width: 50px;"/>
                             <p:menuitem value="SRB" ajax="false" action="#{localization.change(2)}" style="width: 50px;" />
                         </p:submenu>
-                        <p:submenu id="sub-friends" styleClass="sub-friends"  icon="fa fa-bell">
-                            <p:menuitem>
-                                <h:form>
-                                    <p:poll async="true" interval="5" listener="#{friendsRequest.get()}"
+                        <p:submenu id="sub-friends" styleClass="sub-friends" icon="fa fa-bell">
+                            <p:menuitem >
+                               
+ <!--                                   <p:poll interval="5" listener="# {friendsRequest.get()}"
                                             update="ds-friendsRequest" autoStart="true"  onsuccess="proveri()"/>
-                                    <p:dataScroller id="ds-friendsRequest" value="#{friendsRequest.friends}" 
+ -->                                   <p:dataScroller id="ds-friendsRequest" value="#{friendsRequest.friends}" 
                                                     var="f" chunkSize="10" mode="inline"
                                                     style="width: 150px;" 
                                                     >
@@ -97,7 +98,7 @@
                                         </p:panelGrid> 
                                     </p:dataScroller>
                                     <p:growl id="msg" showDetail="true" life="1000" />
-                                </h:form>
+                              
                             </p:menuitem>
                         </p:submenu>
 
@@ -118,7 +119,8 @@
                                 <p:ajax event="itemSelect" listener="#{autoCompleteView.onItemSelect}" update="@all" />
                             </p:autoComplete>
 
-                            <p:commandButton value="#{msg.msg_logout_button}" action="#{mBKorisnik.logout()}" ajax="false" icon="fa fa-sign-out fa-lg"/> 
+                            <p:commandButton value="#{msg.msg_logout_button}" action="#{mBKorisnik.logout()}" 
+                                             ajax="false" icon="fa fa-sign-out fa-lg"/> 
 
                         </f:facet>
                     </p:menubar>

@@ -37,16 +37,6 @@
                         <p:column headerText="Vreme do">
                             <h:outputText value="#{trening.vremeDo}" />
                         </p:column>
-                        <p:summaryRow>
-                            <p:column colspan="2" style="text-align:right">
-                                <h:outputText value="Ukupno clanova na treningu: " />
-                            </p:column>
-                            <p:column>
-                                <h:outputText value="#{trening.clanovi.size()}">
-                                    <f:convertNumber type="number" />
-                                </h:outputText>
-                            </p:column>
-                        </p:summaryRow>
                     </p:dataTable>
                 </h:form>
             </ui:define>
