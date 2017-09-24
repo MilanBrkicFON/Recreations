@@ -21,7 +21,7 @@
             </ui:define>
 
             <ui:define name="content">
-                <h:form>
+                <h:form id="forma-prikaz">
                     <p:dataTable var="trening" value="#{mbTrening.treninzi}" sortBy="#{trening.sport}" expandableRowGroups="true">
                         <p:headerRow>
                             <p:column colspan="3">
@@ -37,7 +37,17 @@
                         <p:column headerText="Vreme do">
                             <h:outputText value="#{trening.vremeDo}" />
                         </p:column>
+                        <p:column headerText="Obrisi" rendered="#{mBKorisnik.admin}">
+                            <p:commandButton value="Obrisi" action="#{mbTrening.obrisi(trening)}" update="forma-prikaz"/>
+                        </p:column>
+                        <p:column headerText="Izmeni" rendered="#{mBKorisnik.admin}">
+                            <p:commandButton value="Izmeni" ajax="false" action="#{mbTrening.izmena(trening)}">
+                            </p:commandButton>
+                        </p:column>
                     </p:dataTable>
+                    <p:growl showDetail="true" id="growl" />
+
+ 
                 </h:form>
             </ui:define>
 

@@ -45,5 +45,7 @@ public class Navigacija {
     public String dodajTrening(){
         return "/admin/dodajTrening.xhtml?faces-redirect=true";
     }
-    
+     public String izmeniTrening(){
+        return "/admin/izmeniTrening.xhtml?faces-redirect=true";
+    }   
 }

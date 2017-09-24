@@ -14,7 +14,9 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
+import model.Clan;
 import model.Korisnik;
+import model.Osoba;
 import model.Relationship;
 import utility.Kontroler;
 
@@ -113,9 +115,16 @@ public class MBKorisnik implements Serializable {
     public String registrujKorisnika() {
         try {
             System.out.println("---- POZVALA SE METODA ZA REGISTRUJ KORISNIKA! ----");
-            System.out.println(korisnikZaRegistraciju);
-            kontroler.sacuvajOsobu(korisnikZaRegistraciju.getOsoba());
+            
+            
+            Osoba o = korisnikZaRegistraciju.getOsoba();
+            Clan c = new Clan("", LocalDate.now().getYear(), o.getIme(), o.getPrezime(), o.getDatumRodjenja(), o.getPol(), o.getMesto());
+            
+            korisnikZaRegistraciju.setOsoba(c);
+            korisnikZaRegistraciju.setRole(Korisnik.NORMAL);
+            
             kontroler.sacuvajKorisnika(korisnikZaRegistraciju);
+            
             korisnik = korisnikZaRegistraciju;
             System.out.println("USPESNO IZVRSENA METODA");
             return navigacija.editKorisnika();
@@ -159,14 +168,17 @@ public class MBKorisnik implements Serializable {
         try {
             System.out.println("--- POZVALA SE METODA deleteUser() ----");
 
-            kontroler.deleteUser(profilKorisnik);
+            kontroler.deleteUser(korisnik);
 
             System.out.println("uspesno izvrsena metoda");
 
+            FacesContext.getCurrentInstance().addMessage(null, 
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Sistem je obrisao podatke o korisniku!", korisnik.getOsoba().getName()));
+            
             FacesContext.getCurrentInstance()
                     .getApplication()
                     .getNavigationHandler()
-                    .handleNavigation(FacesContext.getCurrentInstance(), "", "index.xhtml");
+                    .handleNavigation(FacesContext.getCurrentInstance(), "", navigacija.index());
         } catch (Exception e) {
 
         }
@@ -191,7 +203,7 @@ public class MBKorisnik implements Serializable {
 
     public String pokreniProfilnuStranu() {
         System.out.println("Korisnik: "+korisnik.getOsoba().getName());
-        profilKorisnik.setOsoba(korisnik.getOsoba());
+        profilKorisnik = korisnik;
         return navigacija.profilna();
     }
     public boolean isProfileSameAsUser() {

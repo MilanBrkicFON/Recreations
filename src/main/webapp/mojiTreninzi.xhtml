@@ -29,12 +29,15 @@
 
                 </p:panelGrid>
 
-                <p:dialog widgetVar="dialogPrijavaNaTrening" closable="true">
+                <p:dialog widgetVar="dialogPrijavaNaTrening" closable="true" resizable="true">
                     <h:form id="form-select">
                         <p:growl id="growl" showDetail="true" />
                         <p:dataTable id="tabela-trening" var="trening" value="#{filterTreninga.treninzi}" 
-                                     scrollRows="20" scrollable="true" liveScroll="true" scrollHeight="150">
-                            <p:column headerText="#{msg.training_name}">
+                                     widgetVar="treninziTabela" emptyMessage="Sistem nije pronasao podatke po zadatom kriterijumu."
+                                     filteredValue="#{filterTreninga.filtriraniTreninzi}"
+                                     reflow="true"
+                                     scrollRows="20" scrollable="true" liveScroll="true" scrollHeight="250">
+                            <p:column headerText="#{msg.training_name}" filterBy="#{trening.nazivTreninga}" filterMatchMode="startsWith">
                                 <h:outputText value="#{trening.nazivTreninga}" />
                             </p:column>
                             <p:column headerText="#{msg.training_date}">
@@ -56,7 +59,7 @@
                                     <f:setPropertyActionListener value="#{trening.treneri}" target="#{filterTreninga.treneriNaTreningu}" />
                                 </p:commandButton>
                             </p:column>
-                            <p:column headerText="Prijavi se" width="50px" style="text-align: center; align-content: center;">
+                            <p:column headerText=" " width="50px" style="text-align: center; align-content: center;">
                                  <p:commandButton icon="fa fa-plus" actionListener="#{filterTreninga.vratiSelektovanog(trening)}"
                                                   rendered="#{!filterTreninga.jeNaTreningu(trening)}" style="margin-left: 15px;"
                                                   update=":form-select :form-tabela"/>
@@ -85,6 +88,7 @@
                                 </ui:repeat>
                             </p:outputPanel>
                         </p:overlayPanel>
+                        <p:growl id="growls" showDetail="true" />
                     </h:form>
                 </p:dialog>
                 <h:form id="form-tabela">
@@ -93,7 +97,7 @@
 
                     <p:dataTable id="treninzi" var="t" value="#{mbTrening.vratiTreninge(mBKorisnik.korisnik.osoba)}">
                         <f:facet name="header">
-                            <p:outputLabel value="#{msg.msg_table_trainings} #{mBKorisnik.korisnik.osoba}" />
+                            <p:outputLabel value="#{msg.msg_table_trainings} #{mBKorisnik.korisnik.osoba.name}" />
                         </f:facet>
                         <p:column headerText="#{msg.training_date}">
                             <h:outputText value="#{t.datum}"/>

@@ -45,6 +45,7 @@ public class Clan extends Osoba implements Serializable {
         this.imeRoditelja = imeRoditelja;
         this.godinaUpisa = godinaUpisa;
     }
+    
 
     
     public boolean isPromenjen() {

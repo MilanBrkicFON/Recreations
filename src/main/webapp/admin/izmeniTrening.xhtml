@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Izmena treninga</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/osnovniTemplate.xhtml">
+            <ui:define name="content">
+                <h2><h:outputText value="Izmena treninga" /></h2>
+                <br/>
+                <br/>
+                <br/>
+                <h:form id="unos-treninga">
+                    <p:panelGrid id="kreirajTreningPanel" columns="2" styleClass="ui-noborder">
+                        <p:outputLabel value="Naziv treninga: "/>
+                        <p:inputText value="#{mbTrening.selektovanTrening.nazivTreninga}" placeholder="Naziv treninga..." />
+                        
+                        
+                        <p:outputLabel value="Odaberi datum:" />
+                        <p:calendar value="#{mbTrening.selektovanTrening.datum}" 
+                                    converter="#{localDateConverter}"
+                                    pages="2" 
+                                    pattern="dd-MM-yyyy" 
+                                    required="true"
+                                    tabindex="1"
+                                    style="z-index: 90 !important"/>
+                        
+                        <p:outputLabel value="Odaberi pocetak treninga: " />
+                        <p:calendar timeOnly="true" value="#{mbTrening.selektovanTrening.vremeOd}" 
+                                    pattern="HH:mm" stepMinute="10" tabindex="2" 
+                                    converter="#{localTimeConverter}"
+                                    required="true"/>
+                        
+                        <p:outputLabel value="Odaberi kraj treninga: " />
+                        <p:calendar timeOnly="true" value="#{mbTrening.selektovanTrening.vremeDo}" 
+                                    converter="#{localTimeConverter}"
+                                    pattern="HH:mm" stepMinute="10" tabindex="3"
+                                    required="true"/>
+
+                    </p:panelGrid>
+                    <p:spacer />
+                    <p:separator />
+                    <br/>
+                    <p:panelGrid columns="2" styleClass="ui-noborder">
+                        <p:outputLabel value="Izaberi sport: " />
+                        <p:selectOneButton value="#{mbTrening.selektovanTrening.sport}" converter="#{sportConverters}" style="margin-left: 30px">
+                            <f:selectItems value="#{mbSport.sports}" var="s">
+                                <h:outputText value="#{s.naziv}" />
+                            </f:selectItems>
+                        </p:selectOneButton>
+                    </p:panelGrid>
+                    <br/>
+                    <p:separator/>
+                
+   
+                    <p:commandButton value="#{msg.edit_save_changes}" 
+                                     action="#{mbTrening.update}" 
+                                     process="@form" update="growl" 
+                                     style="float: right;"/>
+
+                    <p:growl id="growl" showDetail="true" />
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

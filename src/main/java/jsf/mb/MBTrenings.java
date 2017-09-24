@@ -6,17 +6,14 @@
 package jsf.mb;
 
 import javax.inject.Named;
-import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -25,6 +22,7 @@ import model.Clan;
 import model.Osoba;
 import model.Trener;
 import model.Trening;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import utility.Kontroler;
 
@@ -59,7 +57,6 @@ public class MBTrenings implements Serializable {
     @PostConstruct
     public void init() {
         treninzi = kontroler.vratiSveTreninge();
-//        selektovanTrening = new Trening();
         noviTrening = new Trening();
     }
 
@@ -79,6 +76,10 @@ public class MBTrenings implements Serializable {
         this.vremeDo = vremeDo;
     }
 
+    public List<Trening> get(){
+        treninzi = kontroler.vratiSveTreninge(); 
+        return treninzi;
+    }
     public List<Trening> getTreninzi() {
         return treninzi;
     }
@@ -161,10 +162,47 @@ public class MBTrenings implements Serializable {
             System.out.println("VREME: " + noviTrening.getVremeOd().toString());
             noviTrening.setVremeDo(LocalDateTime.ofInstant(vremeDo.toInstant(), ZoneId.systemDefault()).toLocalTime());
             kontroler.sacuvaj(noviTrening);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sacuvan!", noviTrening.toString()));
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Uspesno ste kreirali novi trening!", noviTrening.toString()));
             return nav.pocetna();
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Greska!", e.getMessage()));
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sistem ne moze da sacuva novi trening!", e.getMessage()));
+        }
+        return null;
+    }
+
+    public void obrisi(Trening trening) {
+        try {
+            kontroler.obrisi(trening);
+            treninzi = kontroler.vratiSveTreninge();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Sistem je uspesno obrisao trening", noviTrening.toString()));
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, 
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sistem nije obrsao trening.", e.getMessage()));
+        }
+    }
+
+    public void update() {
+        try {
+            System.out.println("SELEKTOVAN TRENING:"+ selektovanTrening.toString());
+            kontroler.izmeni(selektovanTrening);
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Sistem je uspesno izmenio trening", noviTrening.toString()));
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, 
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sistem nije izmenio podatke!", e.getMessage()));
+        }
+    }
+
+    public String izmena(Trening trening) {
+        try {
+            selektovanTrening = trening;
+            return nav.izmeniTrening();
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Greska!", e.getMessage()));
         }
         return null;
     }

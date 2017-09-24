@@ -7,6 +7,7 @@ package model;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -26,7 +27,7 @@ public class Korisnik implements Serializable {
     private String password;
 
     @JoinColumn(name = "osoba", referencedColumnName = "idOsoba")
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Osoba osoba;
 
     private String role;

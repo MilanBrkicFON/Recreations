@@ -7,12 +7,15 @@ package utility;
 
 import com.password.hashing.PasswordHashing;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import model.Clan;
 import model.Korisnik;
 import model.Mesto;
 import model.Trening;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import javax.persistence.NoResultException;
@@ -22,6 +25,7 @@ import model.Relationship;
 import model.Sport;
 import model.Trener;
 import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -59,11 +63,9 @@ public class Kontroler implements Serializable {
     }
 
     public Korisnik vratiKorisnika(Korisnik korisnik) throws Exception {
-        String hql = "from Korisnik WHERE username = :username";
         session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
 
-        Korisnik vracenKorisnik = null;
         String pass = null;
         try {
             tx = session.beginTransaction();
@@ -71,14 +73,16 @@ public class Kontroler implements Serializable {
             PasswordHashing ph = new PasswordHashing(korisnik.getPassword());
             pass = ph.generateHash();
 
-            Query query = session.createQuery(hql);
-            query.setParameter("username", korisnik.getUsername());
-
-            vracenKorisnik = (Korisnik) query.list().get(0);
-            if (vracenKorisnik.getPassword().equals(pass)) {
-                return vracenKorisnik;
-            } else {
+            Korisnik k = session.find(Korisnik.class, korisnik.getUsername());
+            
+            if (k == null) {
                 throw new Exception("Korisnik sa datim korisnickim imenom ili sifrom ne postoji!");
+            }
+
+            if (k.getPassword().equals(pass)) {
+                return k;
+            } else {
+                throw new Exception("Korisnicka lozinka je netacna!");
             }
         } catch (Exception e) {
             if (tx != null) {
@@ -91,22 +95,33 @@ public class Kontroler implements Serializable {
         return null;
     }
 
-    public void sacuvajKorisnika(Korisnik korisnik) {
+    public void sacuvajKorisnika(Korisnik korisnik) throws Exception {
         session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
 
         try {
             tx = session.beginTransaction();
+            Korisnik k = session.find(Korisnik.class, korisnik.getUsername());
+            
+            if(k != null){
+                throw new Exception("Korisnik sa datim korisnickim imenom vec postoji!");
+            }
             PasswordHashing ph = new PasswordHashing(korisnik.getPassword());
             korisnik.setPassword(ph.generateHash());
             session.save(korisnik);
             tx.commit();
-            System.out.println("uspesno je uradjena izmena podataka." + this.getClass());
+            System.out.println("uspesno je sacuvan Korisnik." + this.getClass());
+        } catch (HibernateException e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            throw new Exception("Korisnicko ime vec postoji!");
         } catch (Exception e) {
             if (tx != null) {
                 tx.rollback();
             }
-            System.out.println("NIJE USPESNO uradjena izmena podataka." + this.getClass());
+            System.out.println("NIJE USPESNO sacuvan Korisnik." + this.getClass());
+            throw e;
         } finally {
             session.close();
         }
@@ -196,6 +211,11 @@ public class Kontroler implements Serializable {
     public static void main(String[] args) {
         Kontroler kontroler = new Kontroler();
 
+        try {
+            kontroler.sacuvajKorisnika(new Korisnik("novi", "novi", new Clan("", 2017, "M", "M", LocalDate.now(), 'M', new Mesto(11000))));
+        } catch (Exception ex) {
+            Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public List<Korisnik> vratiSveKorisnike() {
@@ -447,6 +467,25 @@ public class Kontroler implements Serializable {
                 tx.rollback();
             }
             throw e;
+        } finally {
+            session.close();
+        }
+    }
+
+    public void obrisi(Trening trening) {
+        session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
+        try {
+
+            tx = session.beginTransaction();
+
+            session.delete(trening);
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
         } finally {
             session.close();
         }

@@ -77,8 +77,12 @@ public class FilterTreninga implements Serializable {
     }
 
     public void vratiSelektovanog(Trening trening) {
-        trening.getClanovi().add((Clan) mbKorisnik.getKorisnik().getOsoba());
+        
         try{
+            if (trening.getClanovi().size() == trening.getSport().getMaxBrClanova()) {
+                throw new Exception("Sistem ne moze da prijavi korisnika na trening.");
+            }
+            trening.getClanovi().add((Clan) mbKorisnik.getKorisnik().getOsoba());
             kontroler.izmeni(trening);
             FacesContext.getCurrentInstance()
                     .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO
@@ -87,7 +91,7 @@ public class FilterTreninga implements Serializable {
         }catch(Exception e){
             FacesContext.getCurrentInstance()
                     .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR
-                            , "Niste se prijavili na trening!"
+                            , e.getMessage()
                             , trening.getNazivTreninga()));
         }
         //RequestContext.getCurrentInstance().closeDialog(trening);

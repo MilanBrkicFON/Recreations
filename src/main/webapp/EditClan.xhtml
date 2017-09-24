@@ -28,8 +28,15 @@
                         <p:inputText value="#{mBKorisnik.korisnik.osoba.prezime}" />
 
                         <p:outputLabel value="#{msg.msg_email}: " /> 
-                        <p:inputText value="#{mBKorisnik.korisnik.username}" />
+                        <p:inputText value="#{mBKorisnik.korisnik.username}" type="email"
+                                     validatorMessage="Sistem ne moze da sacuva izmene." >
+                         <f:validateRegex
+		pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                        </p:inputText>
 
+                        <p:outputLabel value="#{msg.msg_sex}: " /> 
+                        <p:inputText  maxlength="1" value="#{mBKorisnik.korisnik.osoba.pol}" />
+                        
                         <p:outputLabel value="#{msg.msg_birthday}: " /> 
                         <p:calendar id="popup" 
                                     pattern="dd-MM-yyyy" 
@@ -44,25 +51,24 @@
                                          value="#{mBKorisnik.korisnik.osoba.mesto}" 
                                          converter="#{mestoConv}" 
                                          style="width:125px">
-                            
+
                             <f:selectItems  var="mesto" value="#{MBSviClanovi.mesta}" itemValue="#{mesto}" itemLabel="#{mesto}" />
                         </p:selectOneMenu>
-                       
+
                         <p:outputLabel value="#{msg.msg_height}" />
                         <p:inputNumber value="#{mBKorisnik.korisnik.osoba.visina}" 
                                        decimalPlaces="2" 
                                        decimalSeparator="." 
                                        symbol="cm"
                                        symbolPosition="s"/>
-                        
+
                         <p:outputLabel value="#{msg.msg_weight}" />
                         <p:inputNumber value="#{mBKorisnik.korisnik.osoba.tezina}" 
                                        decimalPlaces="2"  
                                        symbol="kg"
                                        symbolPosition="s"/>
-                        
-                        <p:commandButton id="save_button" 
 
+                        <p:commandButton id="save_button" 
                                          value="#{msg.edit_profile_button}" icon="fa fa-save" 
                                          action="#{mBKorisnik.saveChanges}" process="osnovni-podaci" update="osnovni-podaci"
                                          />
@@ -95,7 +101,6 @@
                 </h:form>
                 <h:form>
                     <p:commandButton id="delete_profile" 
-                                     ajax="false"
                                      value="#{msg.delete_profile}" 
                                      action="#{mBKorisnik.deleteUser}"
                                      style="color: red; width: 200px; height: 50px; float: right;" 
@@ -104,7 +109,8 @@
                     </p:commandButton>
                     <p:growl id="msg" showDetail="true"   />
                     <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-                        <p:commandButton value="#{msg.Yes}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="#{msg.Yes}" type="button" onclick="alert('Sistem je obrisao podatke o korisniku!')" 
+                                         styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                         <p:commandButton value="#{msg.No}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                     </p:confirmDialog>
                 </h:form>
