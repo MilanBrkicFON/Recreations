@@ -29,6 +29,20 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import so.OpstaSO;
+import so.SOIzmeniKorisnika;
+import so.SOIzmeniTrening;
+import so.SONadjiOsobu;
+import so.SOObrisiKorisnika;
+import so.SOObrisiTrening;
+import so.SOPrijaviKorisnika;
+import so.SOSacuvajKorisnika;
+import so.SOSacuvajTrening;
+import so.SOVratiSvaMesta;
+import so.SOVratiSveOsobe;
+import so.SOVratiSveSportove;
+import so.SOVratiSveTrenere;
+import so.SOVratiSveTreninge;
 
 /**
  *
@@ -44,107 +58,98 @@ public class Kontroler implements Serializable {
 
     }
 
-    public void kreirajIUbaciMesto(Mesto m) {
-        session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = null;
-        try {
-            tx = session.beginTransaction();
-
-            session.saveOrUpdate(m);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-        } finally {
-            session.close();
-        }
-
-    }
-
     public Korisnik vratiKorisnika(Korisnik korisnik) throws Exception {
-        session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = null;
-
-        String pass = null;
-        try {
-            tx = session.beginTransaction();
-
-            PasswordHashing ph = new PasswordHashing(korisnik.getPassword());
-            pass = ph.generateHash();
-
-            Korisnik k = session.find(Korisnik.class, korisnik.getUsername());
-            
-            if (k == null) {
-                throw new Exception("Korisnik sa datim korisnickim imenom ili sifrom ne postoji!");
-            }
-
-            if (k.getPassword().equals(pass)) {
-                return k;
-            } else {
-                throw new Exception("Korisnicka lozinka je netacna!");
-            }
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-                throw e;
-            }
-        } finally {
-            session.close();
-        }
-        return null;
+        SOPrijaviKorisnika so = new SOPrijaviKorisnika(korisnik);
+        so.opsteIzvrsenje();
+        return so.getKorisnik();
+//        session = HibernateUtil.getSessionFactory().openSession();
+//        Transaction tx = null;
+//
+//        String pass = null;
+//        try {
+//            tx = session.beginTransaction();
+//
+//            PasswordHashing ph = new PasswordHashing(korisnik.getPassword());
+//            pass = ph.generateHash();
+//
+//            Korisnik k = session.find(Korisnik.class, korisnik.getUsername());
+//            
+//            if (k == null) {
+//                throw new Exception("Korisnik sa datim korisnickim imenom ili sifrom ne postoji!");
+//            }
+//
+//            if (k.getPassword().equals(pass)) {
+//                return k;
+//            } else {
+//                throw new Exception("Korisnicka lozinka je netacna!");
+//            }
+//        } catch (Exception e) {
+//            if (tx != null) {
+//                tx.rollback();
+//                throw e;
+//            }
+//        } finally {
+//            session.close();
+//        }
+//        return null;
     }
 
     public void sacuvajKorisnika(Korisnik korisnik) throws Exception {
-        session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = null;
-
-        try {
-            tx = session.beginTransaction();
-            Korisnik k = session.find(Korisnik.class, korisnik.getUsername());
-            
-            if(k != null){
-                throw new Exception("Korisnik sa datim korisnickim imenom vec postoji!");
-            }
-            PasswordHashing ph = new PasswordHashing(korisnik.getPassword());
-            korisnik.setPassword(ph.generateHash());
-            session.save(korisnik);
-            tx.commit();
-            System.out.println("uspesno je sacuvan Korisnik." + this.getClass());
-        } catch (HibernateException e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            throw new Exception("Korisnicko ime vec postoji!");
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            System.out.println("NIJE USPESNO sacuvan Korisnik." + this.getClass());
-            throw e;
-        } finally {
-            session.close();
-        }
+        OpstaSO so = new SOSacuvajKorisnika(korisnik);
+        so.opsteIzvrsenje();
+//        
+//        session = HibernateUtil.getSessionFactory().openSession();
+//        Transaction tx = null;
+//
+//        try {
+//            tx = session.beginTransaction();
+//            Korisnik k = session.find(Korisnik.class, korisnik.getUsername());
+//            
+//            if(k != null){
+//                throw new Exception("Korisnik sa datim korisnickim imenom vec postoji!");
+//            }
+//            PasswordHashing ph = new PasswordHashing(korisnik.getPassword());
+//            korisnik.setPassword(ph.generateHash());
+//            session.save(korisnik);
+//            tx.commit();
+//            System.out.println("uspesno je sacuvan Korisnik." + this.getClass());
+//        } catch (HibernateException e) {
+//            if (tx != null) {
+//                tx.rollback();
+//            }
+//            throw new Exception("Korisnicko ime vec postoji!");
+//        } catch (Exception e) {
+//            if (tx != null) {
+//                tx.rollback();
+//            }
+//            System.out.println("NIJE USPESNO sacuvan Korisnik." + this.getClass());
+//            throw e;
+//        } finally {
+//            session.close();
+//        }
     }
 
-    public void izmeniKorisnika(Korisnik korisnik) {
-        session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = null;
-
-        try {
-            tx = session.beginTransaction();
-            session.update(korisnik.getOsoba());
-            session.update(korisnik);
-            tx.commit();
-            System.out.println("uspesno je uradjena izmena podataka." + this.getClass());
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            System.out.println("NIJE USPESNO uradjena izmena podataka." + this.getClass());
-        } finally {
-            session.close();
-        }
+    public void izmeniKorisnika(Korisnik korisnik) throws Exception {
+        OpstaSO so = new SOIzmeniKorisnika(korisnik);
+        so.opsteIzvrsenje();
+//        
+//        session = HibernateUtil.getSessionFactory().openSession();
+//        Transaction tx = null;
+//
+//        try {
+//            tx = session.beginTransaction();
+//            session.update(korisnik.getOsoba());
+//            session.update(korisnik);
+//            tx.commit();
+//            System.out.println("uspesno je uradjena izmena podataka." + this.getClass());
+//        } catch (Exception e) {
+//            if (tx != null) {
+//                tx.rollback();
+//            }
+//            System.out.println("NIJE USPESNO uradjena izmena podataka." + this.getClass());
+//        } finally {
+//            session.close();
+//        }
     }
 
     public List vratiSveClanove() {
@@ -158,54 +163,66 @@ public class Kontroler implements Serializable {
 
     }
 
-    public List<Trener> vratiSveTrenere() {
-        session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        TypedQuery<Trener> query;
-        query = session.createQuery("from Trener");
-        List<Trener> lista = query.getResultList();
-        session.close();
-        return lista;
+    public List<Trener> vratiSveTrenere() throws Exception {
+        SOVratiSveTrenere so = new SOVratiSveTrenere(new ArrayList<Trener>());
+        so.opsteIzvrsenje();
+        return so.getTreneri();
+//        session = HibernateUtil.getSessionFactory().openSession();
+//        session.beginTransaction();
+//        TypedQuery<Trener> query;
+//        query = session.createQuery("from Trener");
+//        List<Trener> lista = query.getResultList();
+//        session.close();
+//        return lista;
     }
 
-    private void dodajTrening(Trening t) {
-        session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = null;
-        try {
-            tx = session.beginTransaction();
-            session.saveOrUpdate(t);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-        } finally {
-            session.close();
-        }
+//    private void dodajTrening(Trening t) throws Exception {
+//        OpstaSO so = new SOSacuvajTrening(t);
+//        so.opsteIzvrsenje();
+//        
+////        session = HibernateUtil.getSessionFactory().openSession();
+////        Transaction tx = null;
+////        try {
+////            tx = session.beginTransaction();
+////            session.saveOrUpdate(t);
+////            tx.commit();
+////        } catch (Exception e) {
+////            if (tx != null) {
+////                tx.rollback();
+////            }
+////        } finally {
+////            session.close();
+////        }
+//    }
+
+    public List<Mesto> vratiSvaMesta() throws Exception {
+        SOVratiSvaMesta so = new SOVratiSvaMesta(new ArrayList<Mesto>());
+        so.opsteIzvrsenje();
+        return so.getMesta();
+//        session = HibernateUtil.getSessionFactory().openSession();
+//        session.beginTransaction();
+//        TypedQuery query;
+//        query = session.createQuery("from Mesto");
+//        List lista = query.getResultList();
+//        session.close();
+//        return lista;
     }
 
-    public List<Mesto> vratiSvaMesta() {
-        session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        TypedQuery query;
-        query = session.createQuery("from Mesto");
-        List lista = query.getResultList();
-        session.close();
-        return lista;
-    }
-
-    public List<Trening> vratiSveTreninge() {
-        session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        TypedQuery query;
-        query = session.createQuery("from Trening");
-        List<Trening> lista = query.getResultList();
-        for (Trening trening : lista) {
-            Hibernate.initialize(trening.getTreneri());
-            Hibernate.initialize(trening.getClanovi());
-        }
-        session.close();
-        return lista;
+    public List<Trening> vratiSveTreninge() throws Exception {
+        SOVratiSveTreninge so = new SOVratiSveTreninge(new ArrayList<Trening>());
+        so.opsteIzvrsenje();
+        return so.getTreninzi();
+//        session = HibernateUtil.getSessionFactory().openSession();
+//        session.beginTransaction();
+//        TypedQuery query;
+//        query = session.createQuery("from Trening");
+//        List<Trening> lista = query.getResultList();
+//        for (Trening trening : lista) {
+//            Hibernate.initialize(trening.getTreneri());
+//            Hibernate.initialize(trening.getClanovi());
+//        }
+//        session.close();
+//        return lista;
     }
 
     public static void main(String[] args) {
@@ -228,14 +245,17 @@ public class Kontroler implements Serializable {
         return lista;
     }
 
-    public List<Sport> vratiSveSportove() {
-        session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        TypedQuery query;
-        query = session.createQuery("from Sport");
-        List lista = query.getResultList();
-        session.close();
-        return lista;
+    public List<Sport> vratiSveSportove() throws Exception {
+        SOVratiSveSportove so = new SOVratiSveSportove(new ArrayList<Sport>());
+        so.opsteIzvrsenje();
+        return so.getSportovi();
+//        session = HibernateUtil.getSessionFactory().openSession();
+//        session.beginTransaction();
+//        TypedQuery query;
+//        query = session.createQuery("from Sport");
+//        List lista = query.getResultList();
+//        session.close();
+//        return lista;
     }
 
     public Object pronadjiMesto(int parseInt) {
@@ -247,22 +267,22 @@ public class Kontroler implements Serializable {
         return mesto;
     }
 
-    public void sacuvajOsobu(Osoba osoba) {
-        session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = null;
-        try {
-
-            tx = session.beginTransaction();
-            session.saveOrUpdate(osoba);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-        } finally {
-            session.close();
-        }
-    }
+//    public void sacuvajOsobu(Osoba osoba) {
+//        session = HibernateUtil.getSessionFactory().openSession();
+//        Transaction tx = null;
+//        try {
+//
+//            tx = session.beginTransaction();
+//            session.saveOrUpdate(osoba);
+//            tx.commit();
+//        } catch (Exception e) {
+//            if (tx != null) {
+//                tx.rollback();
+//            }
+//        } finally {
+//            session.close();
+//        }
+//    }
 
     public Object pronadjiSport(int parseInt) {
         session = HibernateUtil.getSessionFactory().openSession();
@@ -282,44 +302,53 @@ public class Kontroler implements Serializable {
         return osoba;
     }
 
-    public List<Osoba> vratiSveOsobe() {
-        session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        TypedQuery<Clan> query;
-        query = session.createQuery("from Osoba");
-        List lista = query.getResultList();
-        session.getTransaction().commit();
-        return lista;
+    public List<Osoba> vratiSveOsobe() throws Exception {
+        SOVratiSveOsobe so = new SOVratiSveOsobe(new ArrayList<Osoba>());
+        so.opsteIzvrsenje();
+        return so.getOsobe();
+//        session = HibernateUtil.getSessionFactory().openSession();
+//        session.beginTransaction();
+//        TypedQuery<Clan> query;
+//        query = session.createQuery("from Osoba");
+//        List lista = query.getResultList();
+//        session.getTransaction().commit();
+//        return lista;
     }
 
-    public List<Osoba> vratiSveOsobe(String pretraga) {
-        session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        TypedQuery<Clan> query;
-        query = session.createQuery("from Osoba where lower(concat(ime,' ',prezime)) like :s").setParameter("s", pretraga + "%");
-        List lista = query.getResultList();
-        session.close();
-        return lista;
+    public List<Osoba> vratiSveOsobe(String pretraga) throws Exception {
+        SONadjiOsobu so = new SONadjiOsobu(pretraga,new ArrayList<Osoba>());
+        so.opsteIzvrsenje();
+        return so.getOsobe();
+//        session = HibernateUtil.getSessionFactory().openSession();
+//        session.beginTransaction();
+//        TypedQuery<Clan> query;
+//        query = session.createQuery("from Osoba where lower(concat(ime,' ',prezime)) like :s").setParameter("s", pretraga + "%");
+//        List lista = query.getResultList();
+//        session.close();
+//        return lista;
     }
 
-    public void deleteUser(Korisnik korisnik) {
-        session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = null;
-        try {
-
-            tx = session.beginTransaction();
-
-            session.delete(korisnik.getOsoba());
-            session.delete(korisnik);
-
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-        } finally {
-            session.close();
-        }
+    public void deleteUser(Korisnik korisnik) throws Exception {
+        OpstaSO so = new SOObrisiKorisnika(korisnik);
+        so.opsteIzvrsenje();
+//        
+//        session = HibernateUtil.getSessionFactory().openSession();
+//        Transaction tx = null;
+//        try {
+//
+//            tx = session.beginTransaction();
+//
+//            session.delete(korisnik.getOsoba());
+//            session.delete(korisnik);
+//
+//            tx.commit();
+//        } catch (Exception e) {
+//            if (tx != null) {
+//                tx.rollback();
+//            }
+//        } finally {
+//            session.close();
+//        }
     }
 
     public Relationship areFriends(Korisnik korisnik, Korisnik profilKorisnik) {
@@ -434,61 +463,70 @@ public class Kontroler implements Serializable {
     }
 
     public void izmeni(Trening trening) throws Exception{
-        session = HibernateUtil.getSessionFactory().getCurrentSession();
-        
-        Transaction tx = null;
-        try {
-            tx = session.beginTransaction();
-            
-            session.update(trening);
-            
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            throw e;
-        } finally{
-            session.close();
-        }
+        OpstaSO so = new SOIzmeniTrening(trening);
+        so.opsteIzvrsenje();
+//        
+//        session = HibernateUtil.getSessionFactory().getCurrentSession();
+//        
+//        Transaction tx = null;
+//        try {
+//            tx = session.beginTransaction();
+//            
+//            session.update(trening);
+//            
+//            tx.commit();
+//        } catch (Exception e) {
+//            if (tx != null) {
+//                tx.rollback();
+//            }
+//            throw e;
+//        } finally{
+//            session.close();
+//        }
     }
 
     public void sacuvaj(Trening noviTrening) throws Exception{
-        session = HibernateUtil.getSessionFactory().getCurrentSession();
-
-        Transaction tx = null;
-
-        try {
-            tx = session.beginTransaction();
-            session.save(noviTrening);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            throw e;
-        } finally {
-            session.close();
-        }
+        
+        OpstaSO so = new SOSacuvajTrening(noviTrening);
+        so.opsteIzvrsenje();
+        
+//        session = HibernateUtil.getSessionFactory().getCurrentSession();
+//
+//        Transaction tx = null;
+//
+//        try {
+//            tx = session.beginTransaction();
+//            session.save(noviTrening);
+//            tx.commit();
+//        } catch (Exception e) {
+//            if (tx != null) {
+//                tx.rollback();
+//            }
+//            throw e;
+//        } finally {
+//            session.close();
+//        }
     }
 
-    public void obrisi(Trening trening) {
-        session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = null;
-        try {
-
-            tx = session.beginTransaction();
-
-            session.delete(trening);
-
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-        } finally {
-            session.close();
-        }
+    public void obrisi(Trening trening) throws Exception {
+        OpstaSO so = new SOObrisiTrening(trening);
+        so.opsteIzvrsenje();
+//        session = HibernateUtil.getSessionFactory().openSession();
+//        Transaction tx = null;
+//        try {
+//
+//            tx = session.beginTransaction();
+//
+//            session.delete(trening);
+//
+//            tx.commit();
+//        } catch (Exception e) {
+//            if (tx != null) {
+//                tx.rollback();
+//            }
+//        } finally {
+//            session.close();
+//        }
     }
 
 }

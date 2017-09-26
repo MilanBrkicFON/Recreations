@@ -7,6 +7,8 @@ package jsf.mb;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -44,21 +46,19 @@ public class AutoCompleteView implements Serializable {
         if (search.isEmpty()) {
             return null;
         }
-        return kontroler.vratiSveOsobe(search);
+        try {
+            return kontroler.vratiSveOsobe(search);
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance()
+                    .addMessage("msgs", new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), ""));
+            return null;
+        }
     }
 
     public void onItemSelect(SelectEvent evt) {
-        
-        System.out.println("OSOBA: " + osoba.getName());
-        System.out.println("OSOBA IZ KORISNKA: " + mbKorisnik.getKorisnik().getOsoba().getName());
-        System.out.println("OSOBA IZ profil KORISNKA: " + mbKorisnik.getProfilKorisnik().getOsoba().getName());
-        
+
         mbKorisnik.setProfilKorisnik(kontroler.getSelectedUser(osoba));
-        System.out.println("POSLE SETOVANJA ------------------------------");
-           System.out.println("OSOBA: " + osoba.getName());
-        System.out.println("OSOBA IZ KORISNKA: " + mbKorisnik.getKorisnik().getOsoba().getName());
-        System.out.println("OSOBA IZ profil KORISNKA: " + mbKorisnik.getProfilKorisnik().getOsoba().getName());
-        
+
         FacesContext.getCurrentInstance()
                 .getApplication().getNavigationHandler()
                 .handleNavigation(FacesContext.getCurrentInstance(), "", nav.profilna());
@@ -75,6 +75,5 @@ public class AutoCompleteView implements Serializable {
     public void setOsoba(Osoba osoba) {
         this.osoba = osoba;
     }
-    
-    
+
 }

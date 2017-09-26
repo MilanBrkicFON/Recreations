@@ -7,6 +7,8 @@ package jsf.mb;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.view.ViewScoped;
@@ -35,7 +37,11 @@ public class MBMesta implements Serializable{
     
     @PostConstruct
     public void init(){
-        mesta = kontroler.vratiSvaMesta();
+        try {
+            mesta = kontroler.vratiSvaMesta();
+        } catch (Exception ex) {
+            Logger.getLogger(MBMesta.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public List<Mesto> getMesta() {

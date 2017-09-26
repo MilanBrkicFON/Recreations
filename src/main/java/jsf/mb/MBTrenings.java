@@ -12,6 +12,8 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
@@ -56,8 +58,12 @@ public class MBTrenings implements Serializable {
 
     @PostConstruct
     public void init() {
-        treninzi = kontroler.vratiSveTreninge();
-        noviTrening = new Trening();
+        try {
+            treninzi = kontroler.vratiSveTreninge();
+            noviTrening = new Trening();
+        } catch (Exception ex) {
+            Logger.getLogger(MBTrenings.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public Date getVremeOd() {
@@ -76,7 +82,7 @@ public class MBTrenings implements Serializable {
         this.vremeDo = vremeDo;
     }
 
-    public List<Trening> get(){
+    public List<Trening> get() throws Exception{
         treninzi = kontroler.vratiSveTreninge(); 
         return treninzi;
     }

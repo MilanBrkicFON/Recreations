@@ -7,6 +7,8 @@ package jsf.mb;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
@@ -40,7 +42,11 @@ public class mbSport implements Serializable{
     }
 
     private void retriveData() {
-        sports = kontroler.vratiSveSportove();
+        try {
+            sports = kontroler.vratiSveSportove();
+        } catch (Exception ex) {
+            Logger.getLogger(mbSport.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public List<Sport> getSports() {

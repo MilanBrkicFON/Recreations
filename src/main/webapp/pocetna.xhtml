@@ -22,7 +22,7 @@
 
             <ui:define name="content">
                 <h:form id="forma-prikaz">
-                    <p:dataTable var="trening" value="#{mbTrening.treninzi}" sortBy="#{trening.sport}" expandableRowGroups="true">
+                    <p:dataTable var="trening" value="#{mbTrening.get()}" sortBy="#{trening.sport}" expandableRowGroups="true">
                         <p:headerRow>
                             <p:column colspan="3">
                                 <h:outputText value="#{trening.sport}" />
